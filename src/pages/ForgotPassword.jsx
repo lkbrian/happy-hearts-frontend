@@ -90,7 +90,12 @@ function ForgotPassword() {
         p={4}
         py={"30px"}
       >
-        <Heading color={"#2179F3"} py={"20px"} textAlign={"center"}>
+        <Heading
+          bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
+          bgClip={"text"}
+          py={"20px"}
+          textAlign={"center"}
+        >
           Forgot Password
         </Heading>
         <Formik
@@ -120,8 +125,10 @@ function ForgotPassword() {
               <Button
                 w={"100%"}
                 type="submit"
-                bg="#101f3c"
-                _hover={{ bg: "#2179F3" }}
+                bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
+                _hover={{
+                  bg: "#linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)",
+                }}
                 color="#fff"
                 mb={"20px"}
                 disabled={isSubmitting}

@@ -1,55 +1,59 @@
-import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
-
+import { Box, Flex, useColorMode, useTheme } from "@chakra-ui/react";
 import { useEffect } from "react";
-import Header from "../Components/Header";
+import { Outlet } from "react-router-dom";
 import Sidebar from "../Components/Sidebar";
+import Header from "../Components/Header";
+import InnerFooter from "../Components/InnerFooter";
 import { useAuth } from "../utils/AuthContext";
 import { useParentStore } from "../utils/store";
-import ParentDashboard from "./ParentDashboard";
-import HeroSection from "../Components/HeroSection";
+
 function ParentPortal() {
-  const { parent, loading, fetchParent } = useParentStore((state) => ({
+  const theme = useTheme();
+  const { colorMode } = useColorMode();
+  const { parent, fetchParent } = useParentStore((state) => ({
     parent: state.parent,
-    loading: state.loading,
     fetchParent: state.fetchParent,
   }));
 
-  const { userRole } = useAuth(); // assuming you still need this
-  const id = localStorage.getItem("userId");
+  const { userRole } = useAuth();
+  const id = sessionStorage.getItem("userId");
 
   useEffect(() => {
     if (!parent || parent.length === 0) {
-      fetchParent(id); // Fetch only if parent data is not in the store
+      fetchParent(id); // Fetch parent data if not available
     }
   }, [parent, fetchParent, id]);
 
   return (
     <Flex
       pos={"relative"}
-      bg={"#EDEFF8"}
+      bg={theme.colors.primary[colorMode]}
       h={"100vh"}
       overflow={"hidden"}
       flexDir={"row"}
     >
+      {/* Sidebar */}
       <Sidebar userRole={userRole} />
-      {loading ? (
-        <Box
-          display={"flex"}
-          flexDir={"column"}
-          w={"100%"}
-          justifyContent={"center"}
-          alignItems={"center"}
-        >
-          <Spinner size={"lg"} />
-          <Text>Please wait loading data</Text>
+
+      {/* Main content area */}
+      <Flex
+        flexDir={"column"}
+        ml={"16px"}
+       justifyContent={'space-between'}
+        overflowY={"scroll"}
+        
+        pr={"8px"}
+        pt={'8px'}
+        
+        gap={"10px"}
+        w={"100%"}
+      >
+        <Header />
+        <Box flexGrow={"1"}>
+          <Outlet context={parent} />
         </Box>
-      ) : (
-        <Flex flexDir={"column"} m={"16px"} gap={"10px"} w={"100%"}>
-          <Header />
-          <HeroSection />
-          <ParentDashboard />
-        </Flex>
-      )}
+        <InnerFooter />
+      </Flex>
     </Flex>
   );
 }

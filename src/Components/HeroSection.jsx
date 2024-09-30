@@ -14,7 +14,8 @@ function HeroSection() {
       borderRadius={".4rem"}
     
     >
-      HeroSection
+      <Box color={'#fff'}>Welcome Back</Box>
+      <Box></Box>
     </Box>
   );
 }

@@ -1,33 +1,113 @@
-import { Search2Icon } from "@chakra-ui/icons";
-import { Box, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
+import { HamburgerIcon, MoonIcon, Search2Icon } from "@chakra-ui/icons";
+import {
+  Avatar,
+  AvatarBadge,
+  Box,
+  Flex,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Text,
+  useColorMode,
+  useTheme
+} from "@chakra-ui/react";
+import useToggle from "../utils/useToggle";
+import ProfileModal from "./ProfileModal";
+import { AiFillSun } from "react-icons/ai";
+import useDisclose from "../utils/useDisclose";
+import Drawer from "./Drawer";
+
 
 function Header() {
+  const theme = useTheme()
+  const { colorMode, toggleColorMode } = useColorMode();
+  const { nodeRef, toggleModal } = useToggle();
+  const {navRef,toggleDrawer}=useDisclose()
   return (
-    <Box
-      as="header"
-      bg={"#fff"}
-      color={"#47556A"}
-      display={"flex"}
-      alignItems={"center"}
-      justifyContent={"space-between"}
-      padding={"12px 20px"}
-      width={"100%"}
-      h={"70px"}
-      borderRadius={".4rem"}
-    >
-      <InputGroup
-        bg={"#EDEFF8"}
-        w={"300px"}
+    <>
+      <Drawer navRef={navRef} onClose={toggleDrawer} />
+
+      <Box
+        as="header"
+        bg={theme.colors.background[colorMode]}
+        color={"#47556A"}
+        display={"flex"}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+        padding={"12px 20px"}
+        width={"100%"}
+        h={"70px"}
         borderRadius={".4rem"}
-        border={'none'}
-    >
-        <InputLeftElement pointerEvents="none">
-          <Search2Icon color="gray.300" />
-        </InputLeftElement>
-        <Input type="text" border={"none"} outline={"none"} placeholder={'Search....'}/>
-      </InputGroup>
-      <Box bg={"#d4d4d4"} h="50px" w={"50px"} borderRadius={"50%"}></Box>
-    </Box>
+        position="sticky"
+        top={0}
+        zIndex={1000}
+        backdropBlur={"8px"}
+      >
+        <Flex gap={"20px"} align={"center"}>
+          <HamburgerIcon
+            onClick={toggleDrawer}
+            fontSize={"28px"}
+            cursor={"pointer"}
+            color={theme.colors.icon[colorMode]}
+            display={{ base: "block", xl: "none" }}
+          />
+          <InputGroup
+            bg={theme.colors.primary[colorMode]}
+            w={"300px"}
+            borderRadius={".4rem"}
+            border={"none"}
+          >
+            <InputLeftElement pointerEvents="none">
+              <Search2Icon color="gray.300" />
+            </InputLeftElement>
+            <Input
+              type="text"
+              border={"none"}
+              outline={"none"}
+              placeholder={"Search...."}
+              aria-label="Search"
+            />
+          </InputGroup>
+        </Flex>
+        <Flex gap={"30px"} align={"center"}>
+          <Flex
+            align={"center"}
+            gap={"5px"}
+            onClick={toggleColorMode}
+            cursor={"pointer"}
+          >
+            {colorMode === "dark" ? (
+              <Text color={theme.colors.text[colorMode]}>light</Text>
+            ) : (
+              <Text>dark</Text>
+            )}
+            {colorMode === "dark" ? (
+              <AiFillSun
+                fontSize={"28px"}
+                color={theme.colors.icon[colorMode]}
+              />
+            ) : (
+              <MoonIcon
+                fontSize={"20px"}
+                color={theme.colors.icon[colorMode]}
+              />
+            )}
+          </Flex>
+          <Avatar
+            // icon={<AiOutlineUser fontSize="1.5rem" />}
+            size="md"
+            bg={"#101f3c"}
+            onClick={toggleModal}
+            cursor={"pointer"}
+            name="Segun Adebayo"
+            src="https://bit.ly/sage-adebayo"
+          >
+            <AvatarBadge boxSize=".8rem" bg="green.500" />
+          </Avatar>
+          <ProfileModal nodeRef={nodeRef} />
+        </Flex>
+      </Box>
+    </>
   );
 }
 

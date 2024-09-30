@@ -1,25 +1,45 @@
 import { extendTheme } from "@chakra-ui/react";
 
+const config = {
+  initialColorMode: "light",
+  useSystemColorMode: false,
+};
+
 const theme = extendTheme({
+  config,
+  colors: {
+    primary: {
+      light: "#ebf2fa", 
+      dark: "#2D3748", 
+    },
+    text: {
+      light: "#47556A", 
+      dark: "#fff",
+    },
+    background: {
+      light: "#fff", 
+      dark: "#1A202C", 
+    },
+    cards: {
+      light: "#fff", 
+      dark: "#2D3748", 
+    },
+    splash: {
+      light: "#fff", 
+      dark: "#1A202C", 
+    },
+    icon: {
+      light: "#47556A",
+      dark: "#fff",
+    },
+    sidebar: {
+      light: "#ebf2fa",
+      dark: "#2D3748",
+    },
+  },
   fonts: {
     heading: `'Outfit'`,
     body: `'Outfit'`,
-  },
-  colors: {
-    white: "#FFFFFF",
-    lightBlue: "#ADD8E6",
-    hospitalgreen: "#4CAF50",
-    pastelPink: "#FFD1DC",
-    pastelYellow: "#FFFACD",
-    pastelLavender: "#E6E6FA",
-    pastelPeach: "#FFDAB9",
-    gray: "#B0B0B0",
-    beige: "#F5F5DC",
-    softBrown: "#D2B48C",
-    softYellow: "#F0E68C",
-    teal: "#008080",
-    happyblue: "#2179F3",
-    lavenderpurple: "#967BB6",
   },
 });
 

@@ -1,6 +1,6 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 // import React from "react";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 function Delivery({ data }) {
   return (
     <Box
@@ -10,7 +10,9 @@ function Delivery({ data }) {
       bg={"#fff"}
       borderRadius={".5rem"}
     >
-      <Heading fontSize={"22px"} p={'18px'}>Deliveries</Heading>
+      <Heading fontSize={"22px"} p={"18px"}>
+        Deliveries
+      </Heading>
 
       <Box p={4}>
         {data.map((delivery) => (
@@ -60,6 +62,6 @@ function Delivery({ data }) {
 }
 
 export default Delivery;
-Delivery.propTypes={
-  data: PropTypes.array.isRequired
-}
+Delivery.propTypes = {
+  data: PropTypes.array.isRequired,
+};

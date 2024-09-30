@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 function useToggle() {
   const [isOpen, setIsOpen] = useState(true);

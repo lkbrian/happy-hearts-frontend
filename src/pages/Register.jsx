@@ -1,4 +1,4 @@
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { MoonIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -16,6 +16,8 @@ import {
   Stack,
   Text,
   Spinner,
+  useTheme,
+  useColorMode,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { useState } from "react";
@@ -24,6 +26,7 @@ import toast from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
 import * as Yup from "yup";
 import family_img from "../assets/family.png";
+import { AiFillSun } from "react-icons/ai";
 
 // Define the Yup validation schema
 const validationSchema = Yup.object({
@@ -45,6 +48,8 @@ const validationSchema = Yup.object({
 });
 
 const Register = () => {
+  const theme = useTheme();
+  const { colorMode, toggleColorMode } = useColorMode();
   const [loading, setLoading] = useState(false);
   const initialValues = {
     name: "",
@@ -103,18 +108,41 @@ const Register = () => {
       w="100vw"
       align="center"
       justifyContent="center"
+      bg={theme.colors.background[colorMode]}
     >
+      <Flex
+        onClick={toggleColorMode}
+        cursor={"pointer"}
+        pos={"absolute"}
+        top={4}
+        right={10}
+        gap={"5px"}
+        align={"center"}
+      >
+        {colorMode === "dark" ? <Text>light</Text> : <Text>dark</Text>}
+        {colorMode === "dark" ? (
+          <AiFillSun fontSize={"28px"} color={theme.colors.icon[colorMode]} />
+        ) : (
+          <MoonIcon fontSize={"20px"} color={theme.colors.icon[colorMode]} />
+        )}
+      </Flex>
       <Box
         minH="500px"
         borderRadius="md"
+        bg={theme.colors.background[colorMode]}
+        color={theme.colors.text[colorMode]}
         shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
-        bg="white"
         // borderWidth={1}
         maxW={{ base: "100%", md: "600px" }}
         flex={{ base: 1, lg: 0.5 }}
         p={4}
       >
-        <Heading color="#2179F3" py="20px" textAlign={"center"}>
+        <Heading
+          bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
+          bgClip="text"
+          py="20px"
+          textAlign={"center"}
+        >
           Sign up
         </Heading>
         <Formik
@@ -133,9 +161,7 @@ const Register = () => {
                       <FormLabel>Fullname</FormLabel>
                       <Input
                         {...field}
-                        shadow="0 1px 5px rgba(0, 0, 0, 0.15)"
-                        outline={"none"}
-                        border={"none"}
+                        outline={theme.colors.background[colorMode]}
                         type="text"
                       />
                       <FormErrorMessage>{form.errors.name}</FormErrorMessage>
@@ -150,9 +176,7 @@ const Register = () => {
                       <FormLabel>Email </FormLabel>
                       <Input
                         {...field}
-                        shadow="0 1px 5px rgba(0, 0, 0, 0.15)"
-                        outline={"none"}
-                        border={"none"}
+                        outline={theme.colors.background[colorMode]}
                         type="email"
                       />
                       <FormErrorMessage>{form.errors.email}</FormErrorMessage>
@@ -169,9 +193,7 @@ const Register = () => {
                       <FormLabel>National ID</FormLabel>
                       <Input
                         {...field}
-                        shadow="0 1px 5px rgba(0, 0, 0, 0.15)"
-                        outline={"none"}
-                        border={"none"}
+                        outline={theme.colors.background[colorMode]}
                         type="text"
                       />
                       <FormErrorMessage>
@@ -191,9 +213,7 @@ const Register = () => {
                       <Input
                         {...field}
                         type="text"
-                        shadow="0 1px 5px rgba(0, 0, 0, 0.15)"
-                        outline={"none"}
-                        border={"none"}
+                        outline={theme.colors.background[colorMode]}
                       />
                       <FormErrorMessage>
                         {form.errors.phone_number}
@@ -216,17 +236,13 @@ const Register = () => {
                       >
                         <Stack direction="row">
                           <Radio
-                            shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
-                            outline={"none"}
-                            border={"none"}
+                            outline={theme.colors.background[colorMode]}
                             value="Male"
                           >
                             Male
                           </Radio>
                           <Radio
-                            shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
-                            outline={"none"}
-                            border={"none"}
+                            outline={theme.colors.background[colorMode]}
                             value="Female"
                           >
                             Female
@@ -246,9 +262,7 @@ const Register = () => {
                       <InputGroup>
                         <Input
                           {...field}
-                          shadow="0 1px 5px rgba(0, 0, 0, 0.15)"
-                          outline={"none"}
-                          border={"none"}
+                          outline={theme.colors.background[colorMode]}
                           type={show ? "text" : "password"}
                         />
                         <InputRightElement width="4.5rem">
@@ -275,8 +289,8 @@ const Register = () => {
                 <Button
                   w="100%"
                   type="submit"
-                  bg="#101f3c"
-                  _hover={{ bg: "#2179F3" }}
+                  bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
+                  _hover={{bg:'linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)'}}
                   color="#fff"
                   mt="8px"
                   isLoading={isSubmitting}

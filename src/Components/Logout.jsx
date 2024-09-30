@@ -10,22 +10,17 @@ function Logout() {
   };
   return (
     <Box
-      position={"fixed"}
       onClick={handleClick}
       w={"auto"}
       display={"flex"}
-      color="#2179F3"
-      bg={"#fff"}
-      bottom={0}
-      m={4}
       p={2}
-      borderRadius={".4rem"}
       gap={"6px"}
       cursor={"pointer"}
       alignItems={"center"}
-      shadow={"0 2px 8px rgba(0, 0, 0, 0.4)"}
+      _hover={{ color: "#2179F3", bg: "#e9f0fca1" }}
+      // shadow={"0 2px 8px rgba(0, 0, 0, 0.4)"}
     >
-      <CgLogOut size={"20px"} />
+      <CgLogOut color="#2179F3" size={"20px"} />
       <Text>Logout</Text>
     </Box>
   );

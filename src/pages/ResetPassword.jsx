@@ -125,7 +125,12 @@ function ResetPassword() {
         flex={{ base: 1, lg: 0.5 }}
         p={4}
       >
-        <Heading color={"#2179F3"} py={"20px"} textAlign={"center"}>
+        <Heading
+          bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
+          bgClip={'text'}
+          py={"20px"}
+          textAlign={"center"}
+        >
           Reset Password
         </Heading>
 
@@ -252,9 +257,12 @@ function ResetPassword() {
                 <Button
                   w={"100%"}
                   type="submit"
-                  bg="#101f3c"
-                  _hover={{ bg: "#2179F3" }}
+                  bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
+                  _hover={{
+                    bg: "linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)",
+                  }}
                   color="#fff"
+                  disabled={isSubmitting}
                 >
                   {loading ? <Spinner /> : <Text>Reset password</Text>}
                 </Button>

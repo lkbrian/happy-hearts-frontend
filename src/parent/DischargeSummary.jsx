@@ -1,5 +1,5 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
 function DischargeSummary({ data }) {
   return (
@@ -10,7 +10,9 @@ function DischargeSummary({ data }) {
       bg={"#fff"}
       borderRadius={".5rem"}
     >
-      <Heading fontSize={"22px"} p={'18px'}>Discharge Summary</Heading>
+      <Heading fontSize={"22px"} p={"18px"}>
+        Discharge Summary
+      </Heading>
       <Box p={4}>
         {data.map((summary) => (
           <Box
