@@ -10,15 +10,21 @@ import {
   Button,
   Card,
   CardBody,
+  Checkbox,
+  Container,
   Flex,
+  FormControl,
+  FormLabel,
   Grid,
   Heading,
   HStack,
   Icon,
   Image,
+  Input,
   Link,
   Stack,
   Text,
+  Textarea,
   useColorMode,
   useTheme,
 } from "@chakra-ui/react";
@@ -257,7 +263,7 @@ function Splash() {
       </section>
 
       <section id="services">
-        <Box py={5} pt={75}>
+        <Box py={5} pt={85}>
           <Box mx="auto">
             <Grid
               templateColumns={{ base: "1fr", lg: "1fr 2fr" }}
@@ -401,7 +407,7 @@ function Splash() {
       </section>
 
       <section id="blog">
-        <Box w={{ base: "65%", md: "80%" }} mx={"auto"}>
+        <Box pt={"40px"} w={{ base: "65%", md: "80%" }} mx={"auto"}>
           <Box textAlign={"center"} pt={"85px"}>
             <Heading display={"inline"}> Our Latest</Heading>
             <Heading
@@ -454,7 +460,92 @@ function Splash() {
           </Box>
         </Box>
       </section>
+      <section id="contact">
+        <Box as="section" pt={70}>
+          <Container maxW="container.lg">
+            <Flex align="center" justify="center" textAlign="center" mb={10}>
+              <Flex flexDir={"column"} justify="center" align="center" mb={6}>
+                <Flex
+                  bgGradient="linear(to-r, blue.400, cyan.400)"
+                  borderRadius="full"
+                  boxSize={16}
+                  mb={4}
+                  justify="center"
+                  align="center"
+                  boxShadow="md"
+                >
+                  <Icon mx={"auto"} as={FaUser} boxSize={8} />
+                </Flex>
+                <Heading as="h3" size="lg" mb={2}>
+                  Contact Us
+                </Heading>
+                <Text maxW={"md"}>
+                  For further questions, including partnership opportunities,
+                  please email happyhearts.info@gmail.com.com or contact using
+                  our contact form.
+                </Text>
+              </Flex>
+            </Flex>
 
+            <Box maxW="container.md" mx="auto">
+              <Box p={6} borderRadius="lg">
+                <form id="contact-form" method="post">
+                  <Grid
+                    templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
+                    gap={6}
+                  >
+                    <FormControl id="first-name">
+                      <FormLabel>First Name</FormLabel>
+                      <Input type="text" placeholder="eg. Michael" />
+                    </FormControl>
+                    <FormControl id="last-name">
+                      <FormLabel>Last Name</FormLabel>
+                      <Input type="text" placeholder="eg. Jordan" />
+                    </FormControl>
+                  </Grid>
+
+                  <FormControl id="email" mt={4}>
+                    <FormLabel>Email Address</FormLabel>
+                    <Input
+                      type="email"
+                      placeholder="eg. michael@creative-tim.com"
+                    />
+                  </FormControl>
+
+                  <FormControl id="message" mt={4}>
+                    <FormLabel>Your message</FormLabel>
+                    <Textarea placeholder="Type here" rows={6} />
+                  </FormControl>
+
+                  <Stack
+                    direction={{ base: "column", md: "row" }}
+                    mt={6}
+                    align="center"
+                  >
+                    <Checkbox defaultChecked>
+                      I agree to the{" "}
+                      <Text as="u" color="blue.600" cursor="pointer">
+                        Terms and Conditions
+                      </Text>
+                    </Checkbox>
+                  </Stack>
+
+                  <Button
+                    type="submit"
+                    colorScheme="blue"
+                    bgGradient="linear(to-r, blue.400, cyan.400)"
+                    size="lg"
+                    w="full"
+                    mt={6}
+                  >
+                    Send Message
+                  </Button>
+                </form>
+              </Box>
+            </Box>
+          </Container>
+        </Box>
+      </section>
       <section id="faqs">
         <Box className="navlink" w={{ base: "65%", md: "80%" }} mx={"auto"}>
           <Heading py={"40px"}>FAQ'S</Heading>

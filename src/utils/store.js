@@ -18,3 +18,13 @@ export const useParentStore = create((set) => ({
     }
   },
 }));
+
+
+export const useBreadStore = create((set) => ({
+  selectedItem: localStorage.getItem("selectedItem") || "", // Initialize from localStorage
+  setSelectedItem: (item) => {
+    set({ selectedItem: item });
+    localStorage.setItem("selectedItem", item); // Save to localStorage
+  },
+}));
+

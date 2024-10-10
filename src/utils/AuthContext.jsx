@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }) => {
   const login_url = "/api/login";
 
   const login = async (email, password, account_type) => {
+    console.log(email, account_type, password);
     try {
       const response = await fetch(login_url, {
         method: "POST",
@@ -53,18 +54,18 @@ export const AuthProvider = ({ children }) => {
             color: "#fff",
           },
         });
-        if(data.role == 'parent'){
-          navigate(`/${data.role}_portal/dashboard`)
-        }else if(data.role === 'provider'||data.role=== 'nurse'){
+        if (data.role == "parent") {
+          navigate(`/${data.role}_portal/dashboard`);
+        } else if (data.role === "provider" || data.role === "nurse") {
           navigate(`/provider_portal/dashboard`);
-        }else{
-          navigate(`/user_portal/dashboard`)
+        } else {
+          navigate(`/user_portal/dashboard`);
         }
 
         setAuthData(data.token, data.id, data.role);
       } else {
         const errorData = await response.json();
-        toast.error(errorData.msg,'at else' || "An error occurred", {
+        toast.error(errorData.msg, "at else" || "An error occurred", {
           position: "top-right",
           autoClose: 6000,
           style: {
@@ -81,49 +82,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-const logout = async () => {
-  const token = sessionStorage.getItem("token");
+  const logout = async () => {
+    const token = sessionStorage.getItem("token");
 
-  if (!token) {
-    // Token doesn't exist, proceed to clear session and navigate
-    setToken(null);
-    setUserId(null);
-    setUserRole(null);
-    sessionStorage.clear(); // Clear all session storage
-    toast.info("You are already logged out", {
-      position: "top-right",
-      autoClose: 6000,
-      style: {
-        borderRadius: "10px",
-        background: "#101f3c",
-        color: "#fff",
-      },
-    });
-    navigate("/login");
-    return;
-  }
-
-  try {
-    // Indicate the start of a logout process (e.g., loading spinner or message)
-    const response = await fetch(logout_url, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-
-      // Clear session and state
+    if (!token) {
+      // Token doesn't exist, proceed to clear session and navigate
       setToken(null);
       setUserId(null);
       setUserRole(null);
-      sessionStorage.clear(); // Clear session storage completely
-
-      // Show success message and navigate to login page
-      toast.success(data.msg || "Logout successful", {
+      sessionStorage.clear(); // Clear all session storage
+      toast.info("You are already logged out", {
         position: "top-right",
         autoClose: 6000,
         style: {
@@ -133,11 +101,61 @@ const logout = async () => {
         },
       });
       navigate("/login");
-    } else {
-      const errorData = await response.json();
+      return;
+    }
 
-      // Show error message and navigate to login page
-      toast.error(errorData.msg || "Logout failed. Redirecting to login...", {
+    try {
+      // Indicate the start of a logout process (e.g., loading spinner or message)
+      const response = await fetch(logout_url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        // Clear session and state
+        setToken(null);
+        setUserId(null);
+        setUserRole(null);
+        sessionStorage.clear(); // Clear session storage completely
+
+        // Show success message and navigate to login page
+        toast.success(data.msg || "Logout successful", {
+          position: "top-right",
+          autoClose: 6000,
+          style: {
+            borderRadius: "10px",
+            background: "#101f3c",
+            color: "#fff",
+          },
+        });
+        navigate("/login");
+      } else {
+        const errorData = await response.json();
+
+        // Show error message and navigate to login page
+        toast.error(errorData.msg || "Logout failed. Redirecting to login...", {
+          position: "top-right",
+          autoClose: 6000,
+          style: {
+            borderRadius: "10px",
+            background: "#101f3c",
+            color: "#fff",
+          },
+        });
+        sessionStorage.clear();
+        localStorage.removeItem("selectedItem");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+
+      // Handle network or server error and navigate to login page
+      toast.error("Network error. Logging you out.", {
         position: "top-right",
         autoClose: 6000,
         style: {
@@ -148,26 +166,9 @@ const logout = async () => {
       });
       sessionStorage.clear();
       navigate("/login");
+      localStorage.removeItem("selectedItem");
     }
-  } catch (error) {
-    console.error("Error logging out:", error);
-
-    // Handle network or server error and navigate to login page
-    toast.error("Network error. Logging you out.", {
-      position: "top-right",
-      autoClose: 6000,
-      style: {
-        borderRadius: "10px",
-        background: "#101f3c",
-        color: "#fff",
-      },
-    });
-    sessionStorage.clear();
-    navigate("/login");
-  }
-};
-
-
+  };
 
   return (
     <AuthContext.Provider value={{ token, userId, userRole, login, logout }}>

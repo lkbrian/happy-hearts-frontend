@@ -9,7 +9,6 @@ import Splash from "./pages/Splash";
 import ParentPortal from "./parent/ParentPortal";
 import Prenatal from "./parent/Prenatal";
 import ParentDashboard from "./parent/ParentDashboard";
-import PersonalInfo from "./parent/PersonalInfo";
 import Medications from "./parent/Medications";
 import ChildInfo from "./parent/ChildInfo";
 import Antinatal from "./parent/Antinatal";
@@ -17,6 +16,7 @@ import UserPortal from "./User/UserPortal";
 import UserDashboard from "./User/UserDashboard";
 import ProvidersPortal from "./Provider/ProvidersPortal";
 import ProviderDashboard from "./Provider/ProviderDashboard";
+import PersonalInfo from "./Components/PersonalInfo";
 
 function App() {
   return (
@@ -27,8 +27,6 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/forgot_password" element={<ForgotPassword />} />
         <Route path="/reset_password" element={<ResetPassword />} />
-        {/* <Route path="/user_portal/dashboard" element={<UserPortal />} />
-          <Route path="/providers_portal/dashboard" element={<ProviderPortal />} /> */}
         <Route element={<ParentPortal />}>
           <Route
             path="/parent_portal/dashboard"

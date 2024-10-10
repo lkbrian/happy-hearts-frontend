@@ -8,14 +8,14 @@ function InnerFooter() {
       <Flex
         bg={theme.colors.background[colorMode]}
         color={theme.colors.text[colorMode]}
-        borderTopRadius={".4rem"}
         align={"center"}
         justify={"center"}
         gap={"20px"}
         className="inner-footer"
-        p={"1rem"}
+        p={".4rem"}
         mt="auto"
         bottom={0}
+        borderRadius={'0.7rem'}
       >
         <Image src="/favicon.ico" boxSize={"30px"} alt="Favicon" />
         <Text>&copy; 2024 Happy Hearts</Text>

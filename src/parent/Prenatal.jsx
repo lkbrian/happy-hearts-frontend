@@ -1,15 +1,11 @@
-import { Box, Flex } from "@chakra-ui/react";
-import TermsAndConditions from "../pages/TermsAndConditions";
-import Privacy from "../pages/Privacy";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
 function Prenatal() {
-
   return (
     <>
       <Box>
         <Flex>
-        <TermsAndConditions />
-        <Privacy />
+          <Text>Prenatal</Text>
         </Flex>
       </Box>
     </>

@@ -35,6 +35,9 @@
   align-items: center;
   text-transform: capitalize;
 }
+.breadcrumb-link.active{
+  color: #2179f3;
+}
 .sidebar_link.active,
 .sidebar_link:hover {
   color: #2179f3;

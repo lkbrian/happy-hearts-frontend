@@ -10,25 +10,36 @@ import {
   Text,
   Input,
   Spinner,
+  useTheme,
+  useColorMode,
+  RadioGroup,
+  Radio,
+  Stack,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import forgot_img from "../assets/forgot.png";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
+import { AiFillSun } from "react-icons/ai";
+import { MoonIcon } from "@chakra-ui/icons";
 
 function ForgotPassword() {
   const [loading, setLoading] = useState(false);
-
+  const theme = useTheme();
+  const { colorMode, toggleColorMode } = useColorMode();
   const validation = Yup.object({
+    account_type: Yup.string().required("Account type is needed"),
     email: Yup.string()
       .email("Invalid email format")
       .required("Email is required"),
   });
   const initialvalues = {
+    account_type: "",
     email: "",
   };
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    // const { account_type, email } = values;
     setLoading(true);
     try {
       const response = await fetch("api/forgot_password", {
@@ -79,12 +90,28 @@ function ForgotPassword() {
       align="center"
       justifyContent="center"
     >
+      <Flex
+        onClick={toggleColorMode}
+        cursor={"pointer"}
+        pos={"absolute"}
+        top={4}
+        right={10}
+        gap={"5px"}
+        align={"center"}
+      >
+        {colorMode === "dark" ? <Text>light</Text> : <Text>dark</Text>}
+        {colorMode === "dark" ? (
+          <AiFillSun fontSize={"28px"} color={theme.colors.icon[colorMode]} />
+        ) : (
+          <MoonIcon fontSize={"20px"} color={theme.colors.icon[colorMode]} />
+        )}
+      </Flex>
       <Box
         shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
         outline={"none"}
         border={"none"}
         borderRadius="md"
-        bg="white"
+        bg={theme.colors.background[colorMode]}
         maxW={{ base: "100%", md: "600px" }}
         flex={{ base: 1, lg: 0.5 }}
         p={4}
@@ -105,36 +132,93 @@ function ForgotPassword() {
         >
           {({ isSubmitting }) => (
             <Form>
-              <Field name="email">
-                {({ field, form }) => (
-                  <FormControl
-                    isInvalid={form.errors.email && form.errors.touched}
-                  >
-                    <FormLabel>Email:</FormLabel>
-                    <Input
-                      {...field}
-                      shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
-                      outline={"none"}
-                      border={"none"}
-                      mb={"20px"}
-                    />
-                    <FormErrorMessage>{form.errors.mail}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field>
-              <Button
-                w={"100%"}
-                type="submit"
-                bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
-                _hover={{
-                  bg: "#linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)",
-                }}
-                color="#fff"
-                mb={"20px"}
-                disabled={isSubmitting}
-              >
-                {loading ? <Spinner /> : <Text>Submit</Text>}
-              </Button>
+              <Stack spacing={8} px={"20px"}>
+                <Field name="account_type">
+                  {({ field, form }) => (
+                    <FormControl
+                      isInvalid={
+                        form.errors.account_type && form.touched.account_type
+                      }
+                    >
+                      <FormLabel mb={"12px"}>Account type:</FormLabel>
+
+                      <RadioGroup
+                        {...field}
+                        w={"100%"}
+                        onChange={(value) =>
+                          form.setFieldValue("account_type", value)
+                        }
+                        value={field.value}
+                      >
+                        <Flex mt={2} justify="space-between" wrap="wrap">
+                          <Radio
+                            // shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
+                            outline={theme.colors.background[colorMode]}
+                            // border={"none"}
+                            size={{ base: "md", md: "lg" }}
+                            value="parent"
+                          >
+                            Parent
+                          </Radio>
+                          <Radio
+                            // shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
+                            outline={theme.colors.background[colorMode]}
+                            // border={"none"}
+                            size={{ base: "md", md: "lg" }}
+                            colorScheme="green"
+                            value="provider"
+                          >
+                            Provider
+                          </Radio>
+                          <Radio
+                            // shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
+                            outline={theme.colors.background[colorMode]}
+                            // border={"none"}
+                            size={{ base: "md", md: "lg" }}
+                            colorScheme="red"
+                            value="user"
+                          >
+                            User
+                          </Radio>
+                        </Flex>
+                      </RadioGroup>
+                      <FormErrorMessage>
+                        {form.errors.account_type}
+                      </FormErrorMessage>
+                    </FormControl>
+                  )}
+                </Field>
+                <Field name="email">
+                  {({ field, form }) => (
+                    <FormControl
+                      isInvalid={form.errors.email && form.errors.touched}
+                    >
+                      <FormLabel>Email:</FormLabel>
+                      <Input
+                        {...field}
+                        // shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
+                        outline={theme.colors.background[colorMode]}
+                        // border={"none"}
+                        mb={"20px"}
+                      />
+                      <FormErrorMessage>{form.errors.mail}</FormErrorMessage>
+                    </FormControl>
+                  )}
+                </Field>
+                <Button
+                  w={"100%"}
+                  type="submit"
+                  bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
+                  _hover={{
+                    bg: "#linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)",
+                  }}
+                  color="#fff"
+                  mb={"20px"}
+                  disabled={isSubmitting}
+                >
+                  {loading ? <Spinner /> : <Text>Submit</Text>}
+                </Button>
+              </Stack>
             </Form>
           )}
         </Formik>

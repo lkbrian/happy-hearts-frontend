@@ -1,14 +1,21 @@
-import { Box, Heading, Text, useColorMode, useTheme, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Text,
+  useColorMode,
+  useTheme,
+  VStack,
+} from "@chakra-ui/react";
 
 const TermsAndConditions = () => {
-    const theme = useTheme();
-    const { colorMode } = useColorMode();
+  const theme = useTheme();
+  const { colorMode } = useColorMode();
   return (
     <Box
       p={5}
       bg={theme.colors.background[colorMode]}
       color={theme.colors.text[colorMode]}
-      borderRadius={'.4rem'}
+      borderRadius={".4rem"}
     >
       <Heading as="h4" fontSize={"28px"} mb={4}>
         Terms and Conditions for Happy Hearts
@@ -89,7 +96,7 @@ const TermsAndConditions = () => {
         <Heading as="h3" size="md">
           8. Contact Us
         </Heading>
-        <Text>
+        <Box>
           If you have any questions about these Terms and Conditions, please
           contact us at:
           <ul>
@@ -99,7 +106,7 @@ const TermsAndConditions = () => {
             <li>[Email Address]</li>
             <li>[Phone Number]</li>
           </ul>
-        </Text>
+        </Box>
       </VStack>
     </Box>
   );

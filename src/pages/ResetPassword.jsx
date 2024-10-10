@@ -1,4 +1,4 @@
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { MoonIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -16,6 +16,8 @@ import {
   Spinner,
   Stack,
   Text,
+  useColorMode,
+  useTheme,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { useState } from "react";
@@ -23,9 +25,12 @@ import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router";
 import * as Yup from "yup";
 import reset_img from "../assets/reset.png";
+import { AiFillSun } from "react-icons/ai";
 
 function ResetPassword() {
   const [loading, setLoading] = useState(false);
+  const theme = useTheme();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
@@ -113,11 +118,27 @@ function ResetPassword() {
       align="center"
       justifyContent="center"
     >
+      <Flex
+        onClick={toggleColorMode}
+        cursor={"pointer"}
+        pos={"absolute"}
+        top={4}
+        right={10}
+        gap={"5px"}
+        align={"center"}
+      >
+        {colorMode === "dark" ? <Text>light</Text> : <Text>dark</Text>}
+        {colorMode === "dark" ? (
+          <AiFillSun fontSize={"28px"} color={theme.colors.icon[colorMode]} />
+        ) : (
+          <MoonIcon fontSize={"20px"} color={theme.colors.icon[colorMode]} />
+        )}
+      </Flex>
       <Box
         minH="500px"
         borderRadius="md"
         boxShadow="md"
-        bg="white"
+        bg={theme.colors.background[colorMode]}
         shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
         outline={"none"}
         border={"none"}
@@ -127,7 +148,7 @@ function ResetPassword() {
       >
         <Heading
           bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
-          bgClip={'text'}
+          bgClip={"text"}
           py={"20px"}
           textAlign={"center"}
         >
@@ -161,18 +182,18 @@ function ResetPassword() {
                       >
                         <Flex mt={2} justify="space-between" wrap="wrap">
                           <Radio
-                            shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
-                            outline={"none"}
-                            border={"none"}
+                            // shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
+                            outline={theme.colors.background[colorMode]}
+                            // border={"none"}
                             size={{ base: "md", md: "lg" }}
                             value="parent"
                           >
                             Parent
                           </Radio>
                           <Radio
-                            shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
-                            outline={"none"}
-                            border={"none"}
+                            // shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
+                            outline={theme.colors.background[colorMode]}
+                            // border={"none"}
                             size={{ base: "md", md: "lg" }}
                             colorScheme="green"
                             value="provider"
@@ -180,9 +201,9 @@ function ResetPassword() {
                             Provider
                           </Radio>
                           <Radio
-                            shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
-                            outline={"none"}
-                            border={"none"}
+                            // shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
+                            outline={theme.colors.background[colorMode]}
+                            // border={"none"}
                             size={{ base: "md", md: "lg" }}
                             colorScheme="red"
                             value="user"
@@ -208,9 +229,9 @@ function ResetPassword() {
                       <InputGroup>
                         <Input
                           {...field}
-                          shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
-                          outline={"none"}
-                          border={"none"}
+                          // shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
+                          outline={theme.colors.background[colorMode]}
+                          // border={"none"}
                           type={show ? "text" : "password"}
                         />
                         <InputRightElement>
@@ -237,9 +258,9 @@ function ResetPassword() {
                       <InputGroup>
                         <Input
                           {...field}
-                          shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
-                          outline={"none"}
-                          border={"none"}
+                          // shadow="0 2px 8px rgba(0, 0, 0, 0.1)"
+                          outline={theme.colors.background[colorMode]}
+                          // border={"none"}
                           type={showpass ? "text" : "password"}
                         />
                         <InputRightElement>

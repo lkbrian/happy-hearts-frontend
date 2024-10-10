@@ -6,6 +6,7 @@ import Header from "../Components/Header";
 import InnerFooter from "../Components/InnerFooter";
 import { useAuth } from "../utils/AuthContext";
 import { useParentStore } from "../utils/store";
+import BreadCrumb from "../Components/BreadCrumb";
 
 function ParentPortal() {
   const theme = useTheme();
@@ -22,6 +23,7 @@ function ParentPortal() {
     if (!parent || parent.length === 0) {
       fetchParent(id); // Fetch parent data if not available
     }
+    
   }, [parent, fetchParent, id]);
 
   return (
@@ -49,6 +51,7 @@ function ParentPortal() {
         w={"100%"}
       >
         <Header />
+          <BreadCrumb />
         <Box flexGrow={"1"}>
           <Outlet context={parent} />
         </Box>
