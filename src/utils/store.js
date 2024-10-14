@@ -11,7 +11,7 @@ export const useParentStore = create((set) => ({
       if (!res.ok) throw new Error(`HTTP Error! status: ${res.status}`);
       const data = await res.json();
       set({ parent: data, loading: false });
-      console.log(data); // Log the fetched parent data
+      console.log('store data',data); // Log the fetched parent data
     } catch (error) {
       console.error("Error fetching parent: ", error);
       set({ loading: false }); // Stop loading even if there's an error

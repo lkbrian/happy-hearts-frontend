@@ -4,22 +4,36 @@ import {
   Flex,
   Grid,
   GridItem,
+  Heading,
+  Icon,
   Image,
   Stack,
+  Stat,
+  StatGroup,
+  StatLabel,
+  StatNumber,
   Text,
   useColorMode,
   useTheme,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import Calendar from "react-calendar";
+import { FaCalendarAlt, FaPills } from "react-icons/fa";
 import { useOutletContext } from "react-router";
 import { useParentStore } from "../utils/store";
+
 import _ from "lodash";
-import MedicationsTable from "./MedicationsTable";
-import ChildrensTable from "./ChildrensTable";
+import {
+  FaChildren,
+  FaPrescriptionBottle,
+  FaTruckMedical,
+} from "react-icons/fa6";
+import { GiHypodermicTest, GiTestTubes, GiTwoCoins } from "react-icons/gi";
+// import MedicationsTable from "./MedicationsTable";
+// import ChildrensTable from "./ChildrensTable";
 function ParentDashboard() {
   const data = useOutletContext();
-  console.log(data);
+  // console.log("contextual data",data);
   const [date, setDate] = useState(new Date());
   const parent = useParentStore((state) => state.parent);
   const appointments = _.get(parent, "appointments", []);
@@ -29,8 +43,28 @@ function ParentDashboard() {
     month: "long",
     day: "numeric",
   };
-  const theme = useTheme()
-  const{colorMode} = useColorMode()
+  const theme = useTheme();
+  const { colorMode } = useColorMode();
+  const counts = {
+    appointments: data?.appointments?.length ?? 0,
+    children: data?.children?.length ?? 0,
+    deliveries: data?.delivery?.length ?? 0,
+    medications: data?.medications?.length ?? 0,
+    vaccinations: data?.vaccination_records?.length ?? 0,
+    payments: data?.payments?.length ?? 0,
+    prescriptions: data?.prescriptions?.length ?? 0,
+    labtests: data?.lab_tests?.length ?? 0,
+  };
+  const icons = {
+    appointments: FaCalendarAlt,
+    children: FaChildren,
+    deliveries: FaTruckMedical,
+    medications: FaPills,
+    vaccinations: GiHypodermicTest,
+    payments: GiTwoCoins,
+    prescriptions: FaPrescriptionBottle,
+    labtests: GiTestTubes,
+  };
   return (
     <Flex gap={"20px"} flexDir={"column"}>
       <Box
@@ -85,16 +119,47 @@ function ParentDashboard() {
         mb="10px"
         color="#47556a"
       >
-        <GridItem colSpan={{ base: 12, sm: 12, md: 8, lg: 9 }}>
+        <GridItem
+          bg={theme.colors.background[colorMode]}
+          color={theme.colors.text[colorMode]}
+          borderRadius={".4rem"}
+          colSpan={{ base: 12, sm: 12, md: 8, lg: 9 }}
+        >
+          <Heading as={"h3"} size={"lg"} p={"10px"} textAlign={"center"}>
+            Overall Statistics
+          </Heading>
           <Flex
-            gap={"10px"}
-            flexDir={"column"}
-            p="10px"
-            borderRadius="0.4rem"
-            w="100%"
+            gap={8}
+            flexWrap="wrap"
+            p="20px"
+            justifyContent={{ base: "center", xl: "start" }}
+            m="auto"
           >
-            <MedicationsTable />
-            <ChildrensTable />
+            {Object.keys(counts).map((key, index) => (
+              <StatGroup
+                key={index}
+                borderRadius="md"
+                boxShadow="lg"
+                minW="250px"
+                maxW="350px"
+                h="150px"
+                p={4}
+                textAlign="center"
+                bg="linear-gradient(to bottom right, rgba(33,121,243,1) 45%, rgba(65,202,227,1) 100%)"
+                color="#fff"
+              >
+                <Stat>
+                  {/* Icon */}
+                  {/* Label */}{" "}
+                  <StatNumber fontSize="40px">{counts[key]}</StatNumber>
+                  <StatLabel textTransform="capitalize">
+                    {key.replace(/([A-Z])/g, " $1")}
+                  </StatLabel>
+                  <Icon as={icons[key]} boxSize={8} mb={2} />
+                  {/* Count */}
+                </Stat>
+              </StatGroup>
+            ))}
           </Flex>
         </GridItem>
 
@@ -124,12 +189,13 @@ function ParentDashboard() {
               <Stack>
                 {appointments.length > 0 ? (
                   appointments.map((data, index) => (
-                    <GridItem
+                    <Flex
                       key={index}
                       p="8px"
                       borderBottom="1px solid #d4d4d4"
                       display="flex"
                       justifyContent="space-between"
+                      flexWrap={"wrap"}
                     >
                       <Box>
                         <Text>{data.reason}</Text>
@@ -139,7 +205,7 @@ function ParentDashboard() {
                       </Box>
 
                       <Text>{data.appointment_date.split(" ")[0]}</Text>
-                    </GridItem>
+                    </Flex>
                   ))
                 ) : (
                   <Text>No appointments available</Text>

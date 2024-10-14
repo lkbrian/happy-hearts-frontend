@@ -16,7 +16,7 @@ import UserPortal from "./User/UserPortal";
 import UserDashboard from "./User/UserDashboard";
 import ProvidersPortal from "./Provider/ProvidersPortal";
 import ProviderDashboard from "./Provider/ProviderDashboard";
-import PersonalInfo from "./Components/PersonalInfo";
+import PersonalInfo from "./parent/PersonalInfo";
 
 function App() {
   return (
@@ -36,12 +36,13 @@ function App() {
           <Route path="/parent_portal/aninatal" element={<Antinatal />} />
           <Route path="/parent_portal/medications" element={<Medications />} />
           <Route path="/parent_portal/child_info" element={<ChildInfo />} />
-          <Route path="/parent_portal/personal_info" element={<PersonalInfo />} />
+          <Route
+            path="/parent_portal/personal_info"
+            element={<PersonalInfo />}
+          />
         </Route>
         <Route element={<UserPortal />}>
-          <Route path="/user_portal/dashboard"
-            element={<UserDashboard />}
-          />
+          <Route path="/user_portal/dashboard" element={<UserDashboard />} />
         </Route>
         <Route element={<ProvidersPortal />}>
           <Route

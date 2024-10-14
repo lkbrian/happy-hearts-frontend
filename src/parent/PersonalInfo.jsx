@@ -16,7 +16,7 @@ import {
   Tabs,
   Text,
   useColorMode,
-  useTheme
+  useTheme,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { useState } from "react";
@@ -25,6 +25,7 @@ import "react-toastify/dist/ReactToastify.css";
 import * as Yup from "yup";
 import Privacy from "../pages/Privacy";
 import TermsAndConditions from "../pages/TermsAndConditions";
+import { useOutletContext } from "react-router";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Full Name is required"),
@@ -55,20 +56,22 @@ function PersonalInfo() {
   const theme = useTheme();
   const { colorMode } = useColorMode();
   const [loading, setLoading] = useState(false);
+  const data = useOutletContext();
+  console.log("contextual data", data);
 
   const initialValues = {
-    name: "",
-    email: "",
-    address: "",
-    national_id: "",
-    occupation: "",
-    phone_number: "",
-    marital_status: "",
-    gender: "",
-    next_of_kin: "",
-    kin_phone_number: "",
-    kin_email: "",
-    kin_occupation: "",
+    name: data.name || "",
+    email: data.email || "",
+    address: data.address || "",
+    national_id: data.national_id || "",
+    occupation: data.occupation || "",
+    phone_number: data.phone_number || "",
+    marital_status: data.marital_status || "",
+    gender: data.gender || "",
+    next_of_kin: data.next_of_kin || "",
+    kin_phone_number: data.kin_phone_number || "",
+    kin_email: data.kin_email || "",
+    kin_occupation: data.kin_occupation || "",
   };
 
   // const [show, setShow] = useState(false);
@@ -77,8 +80,8 @@ function PersonalInfo() {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/parents", {
-        method: "POST",
+      const response = await fetch(`/api/parents/${data.parent_id}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -88,15 +91,15 @@ function PersonalInfo() {
       console.log("Response status:", response.status); // Log response status
 
       if (response.ok) {
-        const data = await response.json();
-        console.log("Response data:", data);
-        toast.success(data.msg || "Success!", {
+        const res = await response.json();
+        console.log("Response res:", res);
+        toast.success( "Personal informantion updated!", {
           position: "top-right",
           autoClose: 6000,
         });
       } else {
         const errorData = await response.json();
-        toast.error(errorData.msg || "An error occurred", {
+        toast.error( "An error occurred", {
           position: "top-right",
           autoClose: 6000,
         });
@@ -151,6 +154,7 @@ function PersonalInfo() {
             initialValues={initialValues}
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
+            enableReinitialize={true}
           >
             {({ isSubmitting }) => (
               <Form>
@@ -163,6 +167,7 @@ function PersonalInfo() {
                         >
                           <FormLabel>Full Name</FormLabel>
                           <Input
+                            value={field.value || ""}
                             {...field}
                             outline={theme.colors.background[colorMode]}
                             type="text"
@@ -180,6 +185,7 @@ function PersonalInfo() {
                         >
                           <FormLabel>Email</FormLabel>
                           <Input
+                            value={field.value || ""}
                             {...field}
                             outline={theme.colors.background[colorMode]}
                             type="email"
@@ -201,6 +207,7 @@ function PersonalInfo() {
                         >
                           <FormLabel>National ID</FormLabel>
                           <Input
+                            value={field.value || ""}
                             {...field}
                             outline={theme.colors.background[colorMode]}
                             type="text"
@@ -220,6 +227,7 @@ function PersonalInfo() {
                         >
                           <FormLabel>Occupation</FormLabel>
                           <Input
+                            value={field.value || ""}
                             {...field}
                             outline={theme.colors.background[colorMode]}
                             type="text"
@@ -241,6 +249,7 @@ function PersonalInfo() {
                         >
                           <FormLabel>Address</FormLabel>
                           <Input
+                            value={field.value || ""}
                             {...field}
                             outline={theme.colors.background[colorMode]}
                             type="text"
@@ -252,161 +261,166 @@ function PersonalInfo() {
                       )}
                     </Field>
                     <Field name="phone_number">
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={
-                          form.errors.phone_number && form.touched.phone_number
-                        }
-                      >
-                        <FormLabel>Phone Number</FormLabel>
-                        <Input
-                          {...field}
-                          outline={theme.colors.background[colorMode]}
-                          type="text"
-                        />
-                        <FormErrorMessage>
-                          {form.errors.phone_number}
-                        </FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                  </HStack>
-                  <HStack spacing={6}>
-                  
-                  <Field name="marital_status">
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={
-                          form.errors.marital_status &&
-                          form.touched.marital_status
-                        }
-                      >
-                        <FormLabel>Marital Status</FormLabel>
-                        <RadioGroup
-                          {...field}
-                          onChange={(value) =>
-                            form.setFieldValue("marital_status", value)
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={
+                            form.errors.phone_number &&
+                            form.touched.phone_number
                           }
-                          value={field.value}
                         >
-                          <HStack spacing={4}>
-                            <Radio value="Single">Single</Radio>
-                            <Radio value="Married">Married</Radio>
-                            <Radio value="Divorced">Divorced</Radio>
-                          </HStack>
-                        </RadioGroup>
-                        <FormErrorMessage>
-                          {form.errors.marital_status}
-                        </FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                  <Field name="gender">
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={form.errors.gender && form.touched.gender}
-                      >
-                        <FormLabel>Gender</FormLabel>
-                        <RadioGroup
-                          {...field}
-                          onChange={(value) =>
-                            form.setFieldValue("gender", value)
+                          <FormLabel>Phone Number</FormLabel>
+                          <Input
+                            value={field.value || ""}
+                            {...field}
+                            outline={theme.colors.background[colorMode]}
+                            type="text"
+                          />
+                          <FormErrorMessage>
+                            {form.errors.phone_number}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                  </HStack>
+                  <HStack spacing={6}>
+                    <Field name="marital_status">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={
+                            form.errors.marital_status &&
+                            form.touched.marital_status
                           }
-                          value={field.value}
                         >
-                          <HStack spacing={4}>
-                            <Radio value="Male">Male</Radio>
-                            <Radio value="Female">Female</Radio>
-                          </HStack>
-                        </RadioGroup>
-                        <FormErrorMessage>
-                          {form.errors.gender}
-                        </FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
+                          <FormLabel>Marital Status</FormLabel>
+                          <RadioGroup
+                            {...field}
+                            onChange={(value) =>
+                              form.setFieldValue("marital_status", value)
+                            }
+                            value={field.value}
+                          >
+                            <HStack spacing={4}>
+                              <Radio value="Single">Single</Radio>
+                              <Radio value="Married">Married</Radio>
+                              <Radio value="Divorced">Divorced</Radio>
+                            </HStack>
+                          </RadioGroup>
+                          <FormErrorMessage>
+                            {form.errors.marital_status}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="gender">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={form.errors.gender && form.touched.gender}
+                        >
+                          <FormLabel>Gender</FormLabel>
+                          <RadioGroup
+                            {...field}
+                            onChange={(value) =>
+                              form.setFieldValue("gender", value)
+                            }
+                            value={field.value}
+                          >
+                            <HStack spacing={4}>
+                              <Radio value="Male">Male</Radio>
+                              <Radio value="Female">Female</Radio>
+                            </HStack>
+                          </RadioGroup>
+                          <FormErrorMessage>
+                            {form.errors.gender}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
                   </HStack>
                   <HStack spacing={6}>
-                  <Field name="next_of_kin">
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={
-                          form.errors.next_of_kin && form.touched.next_of_kin
-                        }
-                      >
-                        <FormLabel>Next of Kin</FormLabel>
-                        <Input
-                          {...field}
-                          outline={theme.colors.background[colorMode]}
-                          type="text"
-                        />
-                        <FormErrorMessage>
-                          {form.errors.next_of_kin}
-                        </FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                  <Field name="kin_phone_number">
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={
-                          form.errors.kin_phone_number &&
-                          form.touched.kin_phone_number
-                        }
-                      >
-                        <FormLabel>Next of Kin Phone Number</FormLabel>
-                        <Input
-                          {...field}
-                          outline={theme.colors.background[colorMode]}
-                          type="text"
-                        />
-                        <FormErrorMessage>
-                          {form.errors.kin_phone_number}
-                        </FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
+                    <Field name="next_of_kin">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={
+                            form.errors.next_of_kin && form.touched.next_of_kin
+                          }
+                        >
+                          <FormLabel>Next of Kin</FormLabel>
+                          <Input
+                            value={field.value || ""}
+                            {...field}
+                            outline={theme.colors.background[colorMode]}
+                            type="text"
+                          />
+                          <FormErrorMessage>
+                            {form.errors.next_of_kin}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="kin_phone_number">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={
+                            form.errors.kin_phone_number &&
+                            form.touched.kin_phone_number
+                          }
+                        >
+                          <FormLabel>Next of Kin Phone Number</FormLabel>
+                          <Input
+                            value={field.value || ""}
+                            {...field}
+                            outline={theme.colors.background[colorMode]}
+                            type="text"
+                          />
+                          <FormErrorMessage>
+                            {form.errors.kin_phone_number}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
                   </HStack>
                   <HStack spacing={6}>
-                  <Field name="kin_email">
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={
-                          form.errors.kin_email && form.touched.kin_email
-                        }
-                      >
-                        <FormLabel>Next of Kin Email</FormLabel>
-                        <Input
-                          {...field}
-                          outline={theme.colors.background[colorMode]}
-                          type="email"
-                        />
-                        <FormErrorMessage>
-                          {form.errors.kin_email}
-                        </FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                  <Field name="kin_occupation">
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={
-                          form.errors.kin_occupation &&
-                          form.touched.kin_occupation
-                        }
-                      >
-                        <FormLabel>Next of Kin Occupation</FormLabel>
-                        <Input
-                          {...field}
-                          outline={theme.colors.background[colorMode]}
-                          type="text"
-                        />
-                        <FormErrorMessage>
-                          {form.errors.kin_occupation}
-                        </FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
+                    <Field name="kin_email">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={
+                            form.errors.kin_email && form.touched.kin_email
+                          }
+                        >
+                          <FormLabel>Next of Kin Email</FormLabel>
+                          <Input
+                            value={field.value || ""}
+                            {...field}
+                            outline={theme.colors.background[colorMode]}
+                            type="email"
+                          />
+                          <FormErrorMessage>
+                            {form.errors.kin_email}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="kin_occupation">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={
+                            form.errors.kin_occupation &&
+                            form.touched.kin_occupation
+                          }
+                        >
+                          <FormLabel>Next of Kin Occupation</FormLabel>
+                          <Input
+                            value={field.value || ""}
+                            {...field}
+                            outline={theme.colors.background[colorMode]}
+                            type="text"
+                          />
+                          <FormErrorMessage>
+                            {form.errors.kin_occupation}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
                   </HStack>
                   <Button
                     w="100px"
