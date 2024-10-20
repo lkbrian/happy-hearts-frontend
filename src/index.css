@@ -10,11 +10,7 @@
   color: #2179f3;
   border-radius: 0.5rem;
   padding: 5px 16px;
-  background: linear(
-    to bottom right,
-    #2179f3 25%,
-    #41cae3 100%
-  );
+  background: linear(to bottom right, #2179f3 25%, #41cae3 100%);
   mask-clip: border;
   background-clip: text;
 }
@@ -23,7 +19,6 @@
   color: #fff;
   border-radius: 0.5rem;
   padding: 5px 16px;
-  
 }
 .login-link {
   color: #2179f3;
@@ -35,7 +30,7 @@
   align-items: center;
   text-transform: capitalize;
 }
-.breadcrumb-link.active{
+.breadcrumb-link.active {
   color: #2179f3;
 }
 .sidebar_link.active,
@@ -67,8 +62,8 @@
   border-radius: 8px;
   /* width: 400px; */
 }
-.links:hover{
-color: #2179f3;
+.links:hover {
+  color: #2179f3;
 }
 .react-calendar__tile {
   height: 40px;
@@ -220,5 +215,8 @@ color: #2179f3;
 }
 
 .bg-[EDF2F7] {
-  background-color: #EDF2F7;
+  background-color: #edf2f7;
+}
+.text {
+  text-overflow: ellipsis;
 }

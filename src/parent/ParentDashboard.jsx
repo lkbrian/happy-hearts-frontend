@@ -36,7 +36,7 @@ function ParentDashboard() {
   // console.log("contextual data",data);
   const [date, setDate] = useState(new Date());
   const parent = useParentStore((state) => state.parent);
-  const appointments = _.get(parent, "appointments", []);
+  const appointments = _.get(parent, "appointments", []).slice(-2);
   const options = {
     weekday: "long",
     year: "numeric",
@@ -183,7 +183,7 @@ function ParentDashboard() {
 
             <Box mt="16px">
               <Text fontSize="18px" fontWeight="bold">
-                Upcoming Appointments
+                Appointments
               </Text>
 
               <Stack>
@@ -202,9 +202,37 @@ function ParentDashboard() {
                         <Text fontSize="15px" color="gray.500">
                           {data.info.provider_name}
                         </Text>
+                        <Text
+                          fontSize="15px"
+                          style={{
+                            color:
+                              data.status === "pending"
+                                ? "#F9B264"
+                                : data.status === "visited"
+                                ? "#228B22"
+                                : data.status === "missed"
+                                ? "crimson"
+                                : "gray.500", // default color if none of the statuses match
+                          }}
+                        >
+                          {data.status}
+                        </Text>
                       </Box>
 
-                      <Text>{data.appointment_date.split(" ")[0]}</Text>
+                      <Text>
+                        {new Date(data.appointment_date).toLocaleString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: undefined,
+                            hour12: false,
+                          }
+                        )}
+                      </Text>
                     </Flex>
                   ))
                 ) : (

@@ -76,26 +76,31 @@ function AddChildModal({ isOpen, onClose }) {
       if (response.ok) {
         const res = await response.json();
         console.log("Response res:", res);
-        toast.success("Child information created successfully!", {
+        toast.success(res.msg || "Child created successfully!", {
           position: "top-right",
           autoClose: 6000,
         });
-        window.location.reload();
+        onClose();
       } else {
         const errorData = await response.json();
-        toast.error("An error occurred", {
+        toast.error(errorData.msg || "error encountered", {
           position: "top-right",
           autoClose: 6000,
         });
         throw new Error(errorData.msg || "An error occurred");
       }
+      onClose();
     } catch (error) {
       console.error("Error submitting form:", error);
+      onClose();
     } finally {
       setSubmitting(false);
       setLoading(false);
       setFilename("");
       resetForm();
+      setTimeout(() => {
+        window.location.refresh();
+      }, 4000);
     }
   };
 
@@ -197,7 +202,15 @@ function AddChildModal({ isOpen, onClose }) {
                           <Input
                             {...field}
                             outline={theme.colors.background[colorMode]}
-                            type="date"
+                            type="datetime"
+                            cursor={"text"}
+                            css={{
+                              "&::-webkit-calendar-picker-indicator": {
+                                cursor: "pointer",
+                                width: "25px",
+                                height: "25px", // this targets the date picker icon specifically
+                              },
+                            }}
                           />
                           <FormErrorMessage>
                             {form.errors.date_of_birth}
@@ -212,6 +225,7 @@ function AddChildModal({ isOpen, onClose }) {
                         >
                           <FormLabel
                             bg={theme.colors.background[colorMode]}
+                            color={theme.colors.text[colorMode]}
                             htmlFor="media"
                             className="flex items-center px-4 py-2 font-bold text-white h-[auto] rounded cursor-pointer w-[100%] border-dashed border-2"
                           >
@@ -221,8 +235,11 @@ function AddChildModal({ isOpen, onClose }) {
                               align={"center"}
                               mx={"auto"}
                             >
-                              <BsFillCloudUploadFill  size={'24px'}/>
+                              <BsFillCloudUploadFill size={"24px"} />
                               <Text>Upload child passport pic</Text>
+                              {filename && (
+                                <Text mt={2}>Selected file: {filename}</Text>
+                              )}
                             </Flex>
                           </FormLabel>
 
@@ -245,7 +262,6 @@ function AddChildModal({ isOpen, onClose }) {
                                 }
                               );
                               form.setFieldValue("media", renamedFile);
-                              console.log(renamedFile); // Set file to Formik's value
                               setFilename(file.name); // Update filename state
                             }}
                           />
@@ -253,10 +269,6 @@ function AddChildModal({ isOpen, onClose }) {
                           <FormErrorMessage>
                             {form.errors.media}
                           </FormErrorMessage>
-
-                          {filename && (
-                            <Text mt={2}>Selected file: {filename}</Text>
-                          )}
                         </FormControl>
                       )}
                     </Field>

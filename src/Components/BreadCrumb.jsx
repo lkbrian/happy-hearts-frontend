@@ -1,9 +1,5 @@
 import { ChevronRightIcon } from "@chakra-ui/icons";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink
-} from "@chakra-ui/react";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import propTypes from "prop-types";
 import { FaHome } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
@@ -17,15 +13,20 @@ function BreadCrumb() {
       p={2}
       spacing="8px"
       alignSelf={"end"}
-      display={selectedItem==='Dashboard'?'none':'block'}
+      display={selectedItem === "Dashboard" ? "none" : "block"}
       separator={<ChevronRightIcon color="gray.500" />}
     >
       <BreadcrumbItem alignItems={"center"} justify={"center"} gap={"5px"}>
-        <FaHome /> <BreadcrumbLink href="">DashBoard</BreadcrumbLink>{" "}
+        <FaHome />{" "}
+        <BreadcrumbLink href="/parent_portal/dashboard">
+          DashBoard
+        </BreadcrumbLink>{" "}
       </BreadcrumbItem>
 
       <BreadcrumbItem>
-        <BreadcrumbLink as={NavLink} className="breadcrumb-link">{item}</BreadcrumbLink>
+        <BreadcrumbLink as={NavLink} className="breadcrumb-link">
+          {item}
+        </BreadcrumbLink>
       </BreadcrumbItem>
     </Breadcrumb>
   );

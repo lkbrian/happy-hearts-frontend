@@ -1,8 +1,8 @@
 import { Flex, Image, Text, useColorMode, useTheme } from "@chakra-ui/react";
 
 function InnerFooter() {
-  const theme = useTheme()
-  const{colorMode}=useColorMode()
+  const theme = useTheme();
+  const { colorMode } = useColorMode();
   return (
     <footer>
       <Flex
@@ -12,10 +12,12 @@ function InnerFooter() {
         justify={"center"}
         gap={"20px"}
         className="inner-footer"
-        p={".4rem"}
+        // p={".4rem"}
+        // py={"20px"}
+        // pt={"20px"}
         mt="auto"
-        bottom={0}
-        borderRadius={'0.7rem'}
+        // mb={"-32px"}
+        borderRadius={"0.7rem"}
       >
         <Image src="/favicon.ico" boxSize={"30px"} alt="Favicon" />
         <Text>&copy; 2024 Happy Hearts</Text>

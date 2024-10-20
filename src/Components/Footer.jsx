@@ -1,12 +1,4 @@
-import {
-  Box,
-  Flex,
-  Image,
-  Text,
-  Link,
-  VStack,
-  Icon,
-} from "@chakra-ui/react";
+import { Box, Flex, Image, Text, Link, VStack, Icon } from "@chakra-ui/react";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 import logo from "../assets/logo-icon.svg";
 
@@ -15,7 +7,8 @@ function Footer() {
     <Box
       bg="#023047"
       pt={{ base: "20px", md: "50px" }}
-      px={{ base: "20px", md: "50px" }}
+      // p={{ base: "20px", md: "80px" }}
+      // p={"80px"}
       w="100%"
       display={"flex"}
       flexDir={"column"}
@@ -24,6 +17,7 @@ function Footer() {
       <Flex
         direction={{ base: "column", md: "row" }}
         justify="space-around"
+        p={{ base: "20px", md: "80px" }}
         align="center"
       >
         <Flex direction="column" align="center" mb={{ base: "20px", md: "0" }}>
@@ -33,7 +27,13 @@ function Footer() {
           </Text>
         </Flex>
 
-        <VStack spacing="20px" color="#FFF" align={'start'} textAlign="center" fontSize="sm">
+        <VStack
+          spacing="20px"
+          color="#FFF"
+          align={"start"}
+          textAlign="center"
+          fontSize="sm"
+        >
           <Text fontSize="lg" fontWeight="bold">
             Get in Touch
           </Text>

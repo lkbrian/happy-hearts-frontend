@@ -63,6 +63,7 @@ export const AuthProvider = ({ children }) => {
         }
 
         setAuthData(data.token, data.id, data.role);
+        window.location.reload();
       } else {
         const errorData = await response.json();
         toast.error(errorData.msg, "at else" || "An error occurred", {

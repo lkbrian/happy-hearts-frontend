@@ -15,7 +15,7 @@ import {
   Tr,
   useColorMode,
   useDisclosure,
-  useTheme
+  useTheme,
 } from "@chakra-ui/react";
 import _ from "lodash";
 import { useEffect, useState } from "react";
@@ -27,14 +27,14 @@ function ChildInfo() {
   const children = _.get(parent, "children", []);
   const theme = useTheme();
   const { colorMode } = useColorMode();
-  const [searchTerm, setSearchTerm] = useState('');
-   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [searchTerm, setSearchTerm] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [filteredData, setFilteredData] = useState(children);
 
-    useEffect(() => {
-      setFilteredData(children);
-    }, [children]);
+  useEffect(() => {
+    setFilteredData(children);
+  }, [children]);
   const handleSearch = (event) => {
     const value = event.target.value;
     setSearchTerm(value);
@@ -47,6 +47,7 @@ function ChildInfo() {
 
     setFilteredData(filteredResults);
   };
+
   return (
     <Box
       bg={theme.colors.background[colorMode]}
@@ -113,9 +114,22 @@ function ChildInfo() {
               <Td>{element.certificate_No}</Td>
               <Td>{element.fullname}</Td>
               <Td>{element.gender}</Td>
-              <Td isNumeric>{element.age.split(",")[0]}</Td>
-              <Td isNumeric >
-                <EditIcon cursor={'pointer'} size={'20px'}/>
+              <Td isNumeric>
+                {(() => {
+                  const ageParts = element.age.split(",");
+
+                  for (let part of ageParts) {
+                    let value = parseInt(part);
+                    if (value !== 0) {
+                      return part;
+                    }
+                  }
+
+                  return "0 days";
+                })()}
+              </Td>
+              <Td isNumeric>
+                <EditIcon cursor={"pointer"} size={"20px"} />
               </Td>
             </Tr>
           ))}
