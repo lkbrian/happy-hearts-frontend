@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 import PropTypes from "prop-types";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
+import axiosInstance from "./axiosInstance"; // Adjust the path as necessary
 
 const AuthContext = createContext();
 
@@ -10,13 +11,13 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(sessionStorage.getItem("token") || null);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!token);
   const [userId, setUserId] = useState(
     sessionStorage.getItem("userId") || null
   );
   const [userRole, setUserRole] = useState(
     sessionStorage.getItem("userRole") || null
   );
-
   const navigate = useNavigate();
 
   const setAuthData = (token, userId, userRole) => {
@@ -26,25 +27,19 @@ export const AuthProvider = ({ children }) => {
     setToken(token);
     setUserId(userId);
     setUserRole(userRole);
+    setIsAuthenticated(true); // Update isAuthenticated after setting token
   };
 
-  const logout_url = "/api/logout";
-  const login_url = "/api/login";
-
   const login = async (email, password, account_type) => {
-    console.log(email, account_type, password);
     try {
-      const response = await fetch(login_url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password, account_type }),
-        credentials: "include",
+      const response = await axiosInstance.post("/login", {
+        email,
+        password,
+        account_type,
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = response.data;
         toast.success(data.msg || "Login successful", {
           position: "top-right",
           autoClose: 6000,
@@ -54,19 +49,20 @@ export const AuthProvider = ({ children }) => {
             color: "#fff",
           },
         });
-        if (data.role == "parent") {
-          navigate(`/${data.role}_portal/dashboard`);
-        } else if (data.role === "provider" || data.role === "nurse") {
-          navigate(`/provider_portal/dashboard`);
-        } else {
-          navigate(`/user_portal/dashboard`);
-        }
-
         setAuthData(data.token, data.id, data.role);
-        window.location.reload();
+        sessionStorage.setItem("userEmail", data.email);
+
+        // Navigate based on user role
+        if (data.role === "parent") {
+          navigate(`/${data.role}s/portal/dashboard`);
+        } else if (data.role === "provider" || data.role === "nurse") {
+          navigate(`/providers/portal/dashboard`);
+        } else {
+          navigate(`/users/portal/dashboard`);
+        }
       } else {
-        const errorData = await response.json();
-        toast.error(errorData.msg, "at else" || "An error occurred", {
+        const errorData = response.data;
+        toast.error(errorData.msg || "An error occurred", {
           position: "top-right",
           autoClose: 6000,
           style: {
@@ -87,7 +83,7 @@ export const AuthProvider = ({ children }) => {
     const token = sessionStorage.getItem("token");
 
     if (!token) {
-      // Token doesn't exist, proceed to clear session and navigate
+      // Token doesn't exist, clear session and navigate
       setToken(null);
       setUserId(null);
       setUserRole(null);
@@ -106,22 +102,20 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      // Indicate the start of a logout process (e.g., loading spinner or message)
-      const response = await fetch(logout_url, {
-        method: "DELETE",
+      const response = await axiosInstance.delete("/logout", {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
         },
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = response.data;
 
         // Clear session and state
         setToken(null);
         setUserId(null);
         setUserRole(null);
+        setIsAuthenticated(false);
         sessionStorage.clear(); // Clear session storage completely
 
         // Show success message and navigate to login page
@@ -136,7 +130,7 @@ export const AuthProvider = ({ children }) => {
         });
         navigate("/login");
       } else {
-        const errorData = await response.json();
+        const errorData = response.data;
 
         // Show error message and navigate to login page
         toast.error(errorData.msg || "Logout failed. Redirecting to login...", {
@@ -149,13 +143,10 @@ export const AuthProvider = ({ children }) => {
           },
         });
         sessionStorage.clear();
-        localStorage.removeItem("selectedItem");
         navigate("/login");
       }
     } catch (error) {
       console.error("Error logging out:", error);
-
-      // Handle network or server error and navigate to login page
       toast.error("Network error. Logging you out.", {
         position: "top-right",
         autoClose: 6000,
@@ -167,12 +158,13 @@ export const AuthProvider = ({ children }) => {
       });
       sessionStorage.clear();
       navigate("/login");
-      localStorage.removeItem("selectedItem");
     }
   };
 
   return (
-    <AuthContext.Provider value={{ token, userId, userRole, login, logout }}>
+    <AuthContext.Provider
+      value={{ token, userId, userRole, login, logout, isAuthenticated }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -160,10 +160,12 @@ function LabTests() {
                 <Td>{test.remarks}</Td>
                 <Td>
                   <EditIcon
-                    size="sm"
+                    size="md"
                     onClick={() => {
-                      onEditModalOpen(setElementData(test));
+                      setElementData(test); // Set the admission data for editing
+                      onEditModalOpen();
                     }}
+                    cursor={"pointer"}
                   />
                   <EditLabTest
                     isOpen={isEditModal}

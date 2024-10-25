@@ -160,6 +160,7 @@ function EditAppointmentModal({ isOpen, onClose, data }) {
                           outline={theme.colors.background[colorMode]}
                           type="datetime-local"
                           cursor={"text"}
+                          min={new Date().toISOString().slice(0, 16)}
                           css={{
                             "&::-webkit-calendar-picker-indicator": {
                               cursor: "pointer",

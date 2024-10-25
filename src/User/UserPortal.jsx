@@ -1,17 +1,30 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, useColorMode, useTheme } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import Header from "../Components/Header";
 import InnerFooter from "../Components/InnerFooter";
 import Sidebar from "../Components/Sidebar";
 import { useAuth } from "../utils/AuthContext";
+import { useUsersStore } from "../utils/store";
+import { useEffect } from "react";
 
 function UserPortal() {
   const { userRole } = useAuth();
+  const theme = useTheme();
+  const { colorMode } = useColorMode();
 
+  const { data, loading, fetchAllData } = useUsersStore((state) => ({
+    data: state.data,
+    loading: state.loading,
+    fetchAllData: state.fetchAllData,
+  }));
+  useEffect(() => {
+    fetchAllData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <Flex
       pos={"relative"}
-      bg={"#EDEFF8"}
+      bg={theme.colors.primary[colorMode]}
       h={"100vh"}
       overflow={"hidden"}
       flexDir={"row"}
@@ -32,7 +45,7 @@ function UserPortal() {
       >
         <Header />
         <Box flexGrow={"1"}>
-          <Outlet />
+          <Outlet context={{ data, loading }} />
         </Box>
         <InnerFooter />
       </Flex>

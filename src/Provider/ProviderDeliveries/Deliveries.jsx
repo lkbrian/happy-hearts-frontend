@@ -60,7 +60,7 @@ function Deliveries() {
   // useEffect(() => {
   //   const id = sessionStorage.getItem("userId");
   //   const role = sessionStorage.getItem("userRole");
-  //   const providerUrl = `/api/appointments_for_provider/${id}`;
+  //   const providerUrl = `/api/appointments/provider/${id}`;
   //   const url = `/api/appointments`;
   //   const fetchDeliveries = async () => {
   //     const response = await fetch(role === "provider" ? providerUrl : url);

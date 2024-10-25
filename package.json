@@ -17,6 +17,7 @@
     "@fontsource/lato": "^5.0.21",
     "@fontsource/outfit": "^5.1.0",
     "@smastrom/react-rating": "^1.5.0",
+    "axios": "^1.7.7",
     "formik": "^2.4.6",
     "framer-motion": "^11.3.21",
     "jwt-decode": "^4.0.0",
@@ -32,6 +33,7 @@
     "react-router-dom": "^6.26.0",
     "react-router-hash-link": "^2.4.3",
     "react-toastify": "^10.0.5",
+    "recharts": "^2.13.0",
     "yup": "^1.4.0",
     "zustand": "^4.5.5"
   },

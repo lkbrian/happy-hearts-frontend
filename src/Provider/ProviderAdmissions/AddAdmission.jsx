@@ -27,6 +27,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 import { useProviderStore } from "../../utils/store";
+import axiosInstance from "../../utils/axiosInstance";
 
 function AddAdmission({ isOpen, onClose }) {
   const theme = useTheme();
@@ -79,12 +80,15 @@ function AddAdmission({ isOpen, onClose }) {
     bed_id: "",
     provider_id: Number(provider_id),
   };
-  const { beds, rooms, fetchRooms, fetchBeds } = useProviderStore((state) => ({
-    rooms: state.rooms,
-    beds: state.beds,
-    fetchRooms: state.fetchRooms,
-    fetchBeds: state.fetchBeds,
-  }));
+  const { beds, rooms, fetchRooms, fetchBeds, resetStore } = useProviderStore(
+    (state) => ({
+      rooms: state.rooms,
+      beds: state.beds,
+      fetchRooms: state.fetchRooms,
+      fetchBeds: state.fetchBeds,
+      resetStore: state.resetStore,
+    })
+  );
 
   useEffect(() => {
     if (!rooms || rooms.length === 0) {
@@ -97,35 +101,26 @@ function AddAdmission({ isOpen, onClose }) {
     console.log(values);
 
     try {
-      const response = await fetch(`/api/admissions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+      const response = await axiosInstance.post("/admissions", values);
 
-      if (response.ok) {
-        const res = await response.json();
-        toast.success(res.msg || "Admission created successfully!", {
-          position: "top-right",
-          autoClose: 6000,
-        });
-        onClose();
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.msg || "Error creating admission", {
-          position: "top-right",
-          autoClose: 6000,
-        });
-        throw new Error(errorData.msg || "An error occurred");
-      }
+      // Handle the response
+      toast.success(response.data.msg || "Admission created successfully!", {
+        position: "top-right",
+        autoClose: 6000,
+      });
+      onClose();
     } catch (error) {
+      const errorMsg = error.response?.data?.msg || "Error creating admission";
+      toast.error(errorMsg, {
+        position: "top-right",
+        autoClose: 6000,
+      });
       console.error("Error submitting form:", error);
     } finally {
       setSubmitting(false);
       setLoading(false);
       resetForm();
+      // Optionally reload or redirect if needed
       // setTimeout(() => {
       //   window.location.reload();
       // }, 2000);
@@ -264,8 +259,9 @@ function AddAdmission({ isOpen, onClose }) {
                               {...field}
                               onChange={async (e) => {
                                 const roomId = e.target.value;
-                                form.setFieldValue("room_id", roomId); // Update form state
-                                await fetchBeds(roomId); // Fetch available beds for the selected room
+                                form.setFieldValue("room_id", roomId);
+                                resetStore("beds");
+                                await fetchBeds(roomId);
                               }}
                             >
                               {rooms.map((room) => (

@@ -18,10 +18,8 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import Calendar from "react-calendar";
-import _ from "lodash";
 import { FaCalendarAlt, FaPills } from "react-icons/fa";
 import { useOutletContext } from "react-router";
-import { useProviderStore } from "../utils/store";
 import {
   FaHospitalUser,
   FaPrescriptionBottle,
@@ -32,8 +30,7 @@ function ProviderDashboard() {
   const data = useOutletContext();
   // console.log("contextual data",data);
   const [date, setDate] = useState(new Date());
-  const provider = useProviderStore((state) => state.provider);
-  const appointments = _.get(provider, "appointments", []).slice(-2);
+  const appointments = data?.appointments.slice(-2);
   const options = {
     weekday: "long",
     year: "numeric",
@@ -205,8 +202,14 @@ function ProviderDashboard() {
                             color:
                               data.status === "pending"
                                 ? "#F9B264"
+                                : data.status === "approved"
+                                ? "#3fc49e"
                                 : data.status === "visited"
                                 ? "#228B22"
+                                : data.status === "rejected"
+                                ? "crimson"
+                                : data.status === "awaiting_approval"
+                                ? "#2179F3"
                                 : data.status === "missed"
                                 ? "crimson"
                                 : "gray.500", // default color if none of the statuses match

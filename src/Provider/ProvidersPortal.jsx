@@ -1,28 +1,28 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Flex, useColorMode, useTheme } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import Header from "../Components/Header";
 import InnerFooter from "../Components/InnerFooter";
 import Sidebar from "../Components/Sidebar";
 import { useAuth } from "../utils/AuthContext";
-import { useProviderStore } from "../utils/store";
 import { useEffect } from "react";
+import { useProvidersStore } from "../utils/store";
 
 function ProvidersPortal() {
   const { userRole } = useAuth();
   const theme = useTheme();
   const { colorMode } = useColorMode();
-  const { provider, fetchProvider } = useProviderStore((state) => ({
-    provider: state.provider,
-    fetchProvider: state.fetchProvider,
+  const { data, fetchAllData } = useProvidersStore((state) => ({
+    data: state.data,
+    fetchAllData: state.fetchAllData,
   }));
-
   const id = sessionStorage.getItem("userId");
 
   useEffect(() => {
-    if (!provider || provider.length === 0) {
-      fetchProvider(id);
-    }
-  });
+    fetchAllData(id);
+    console.log(data, id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <Flex
       pos={"relative"}
@@ -51,7 +51,7 @@ function ProvidersPortal() {
         </Box>
 
         <Box flexGrow={"1"}>
-          <Outlet context={provider} />
+          <Outlet context={data} />
         </Box>
         <InnerFooter />
       </Flex>

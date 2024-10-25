@@ -9,7 +9,6 @@ import {
   Image,
   Stack,
   Stat,
-  StatGroup,
   StatLabel,
   StatNumber,
   Text,
@@ -18,52 +17,52 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import Calendar from "react-calendar";
-import { FaCalendarAlt, FaPills } from "react-icons/fa";
+import { FaCalendarAlt, FaFileAlt, FaPills } from "react-icons/fa";
 import { useOutletContext } from "react-router";
-import { useParentStore } from "../utils/store";
 
-import _ from "lodash";
 import {
   FaChildren,
+  FaClipboardCheck,
+  FaClipboardList,
+  FaFlask,
+  FaHospitalUser,
   FaPrescriptionBottle,
   FaTruckMedical,
 } from "react-icons/fa6";
-import { GiHypodermicTest, GiTestTubes, GiTwoCoins } from "react-icons/gi";
+import { GiHypodermicTest, GiTwoCoins } from "react-icons/gi";
 // import MedicationsTable from "./MedicationsTable";
 // import ChildrensTable from "./ChildrensTable";
 function ParentDashboard() {
   const data = useOutletContext();
-  // console.log("contextual data",data);
+  const appointments = data?.appointments;
+  console.log(appointments, "appointments");
   const [date, setDate] = useState(new Date());
-  const parent = useParentStore((state) => state.parent);
-  const appointments = _.get(parent, "appointments", []).slice(-2);
   const options = {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric",
   };
+
   const theme = useTheme();
   const { colorMode } = useColorMode();
-  const counts = {
-    appointments: data?.appointments?.length ?? 0,
-    children: data?.children?.length ?? 0,
-    deliveries: data?.delivery?.length ?? 0,
-    medications: data?.medications?.length ?? 0,
-    vaccinations: data?.vaccination_records?.length ?? 0,
-    payments: data?.payments?.length ?? 0,
-    prescriptions: data?.prescriptions?.length ?? 0,
-    labtests: data?.lab_tests?.length ?? 0,
-  };
   const icons = {
-    appointments: FaCalendarAlt,
-    children: FaChildren,
-    deliveries: FaTruckMedical,
-    medications: FaPills,
-    vaccinations: GiHypodermicTest,
+    vaccines: GiHypodermicTest,
+    discharge_medications: FaPills,
     payments: GiTwoCoins,
-    prescriptions: FaPrescriptionBottle,
-    labtests: GiTestTubes,
+    // present_pregnancies: FaBabyCarriage,
+    // previous_pregnancies: FaHistory,
+    vacination_records: FaClipboardCheck,
+    // medicines: FaCapsules,
+    parents_prescriptions: FaPrescriptionBottle,
+    // parents: FaChild,
+    documents: FaFileAlt,
+    children: FaChildren,
+    lab_tests: FaFlask,
+    appointments: FaCalendarAlt,
+    deliveries: FaTruckMedical,
+    discharge_summaries: FaClipboardList,
+    admissions: FaHospitalUser,
   };
   return (
     <Flex gap={"20px"} flexDir={"column"}>
@@ -124,6 +123,7 @@ function ParentDashboard() {
           color={theme.colors.text[colorMode]}
           borderRadius={".4rem"}
           colSpan={{ base: 12, sm: 12, md: 8, lg: 9 }}
+          p={"10px"}
         >
           <Heading as={"h3"} size={"lg"} p={"10px"} textAlign={"center"}>
             Overall Statistics
@@ -131,38 +131,34 @@ function ParentDashboard() {
           <Flex
             gap={8}
             flexWrap="wrap"
-            p="20px"
             justifyContent={{ base: "center", xl: "start" }}
-            m="auto"
           >
-            {Object.keys(counts).map((key, index) => (
-              <StatGroup
-                key={index}
-                borderRadius="md"
-                boxShadow="lg"
-                minW="250px"
-                maxW="350px"
-                h="150px"
-                p={4}
-                textAlign="center"
-                bg="linear-gradient(to bottom right, rgba(33,121,243,1) 45%, rgba(65,202,227,1) 100%)"
-                color="#fff"
-              >
-                <Stat>
-                  {/* Icon */}
-                  {/* Label */}{" "}
-                  <StatNumber fontSize="40px">{counts[key]}</StatNumber>
+            {Object.keys(data)
+              .slice(0, 10)
+              .map((key) => (
+                <Stat
+                  key={key}
+                  borderRadius="md"
+                  boxShadow="lg"
+                  minW="250px"
+                  maxW="350px"
+                  h="150px"
+                  p={4}
+                  textAlign="center"
+                  bg="linear-gradient(to bottom right, rgba(33,121,243,1) 45%, rgba(65,202,227,1) 100%)"
+                  color="#fff"
+                >
+                  <StatNumber fontSize="40px">
+                    {data[key]?.length ?? 0}
+                  </StatNumber>
                   <StatLabel textTransform="capitalize">
-                    {key.replace(/([A-Z])/g, " $1")}
+                    {key.replace(/_/g, " ")}
                   </StatLabel>
                   <Icon as={icons[key]} boxSize={8} mb={2} />
-                  {/* Count */}
                 </Stat>
-              </StatGroup>
-            ))}
+              ))}
           </Flex>
         </GridItem>
-
         <GridItem colSpan={{ base: 12, sm: 12, md: 4, lg: 3 }}>
           <Box
             bg={theme.colors.background[colorMode]}
@@ -188,7 +184,7 @@ function ParentDashboard() {
 
               <Stack>
                 {appointments.length > 0 ? (
-                  appointments.map((data, index) => (
+                  appointments.slice(-2).map((data, index) => (
                     <Flex
                       key={index}
                       p="8px"
@@ -208,8 +204,14 @@ function ParentDashboard() {
                             color:
                               data.status === "pending"
                                 ? "#F9B264"
+                                : data.status === "approved"
+                                ? "#3fc49e"
                                 : data.status === "visited"
                                 ? "#228B22"
+                                : data.status === "rejected"
+                                ? "crimson"
+                                : data.status === "awaiting_approval"
+                                ? "#2179F3"
                                 : data.status === "missed"
                                 ? "crimson"
                                 : "gray.500", // default color if none of the statuses match

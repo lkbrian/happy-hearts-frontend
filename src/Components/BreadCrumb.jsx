@@ -18,7 +18,7 @@ function BreadCrumb() {
     >
       <BreadcrumbItem alignItems={"center"} justify={"center"} gap={"5px"}>
         <FaHome />{" "}
-        <BreadcrumbLink href="/parent_portal/dashboard">
+        <BreadcrumbLink href="/parents/portal/dashboard">
           DashBoard
         </BreadcrumbLink>{" "}
       </BreadcrumbItem>

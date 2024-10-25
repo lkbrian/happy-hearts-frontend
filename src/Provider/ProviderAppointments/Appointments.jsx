@@ -156,8 +156,14 @@ function Appointments() {
                       ? "#F9B264"
                       : element.status === "visited"
                       ? "#228B22"
+                      : element.status === "awaiting_approval"
+                      ? "#2179f3"
                       : element.status === "missed"
                       ? "crimson"
+                      : element.status === "rejected"
+                      ? "crimson"
+                      : element.status === "approved"
+                      ? "#3fc49e"
                       : "gray.500",
                 }}
               >

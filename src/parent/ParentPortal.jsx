@@ -5,26 +5,25 @@ import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
 import InnerFooter from "../Components/InnerFooter";
 import { useAuth } from "../utils/AuthContext";
-import { useParentStore } from "../utils/store";
+import { useParentsStore } from "../utils/store";
 import BreadCrumb from "../Components/BreadCrumb";
 
 function ParentPortal() {
   const theme = useTheme();
   const { colorMode } = useColorMode();
-  const { parent, fetchParent } = useParentStore((state) => ({
-    parent: state.parent,
-    fetchParent: state.fetchParent,
-  }));
 
+  const { data, fetchAllData } = useParentsStore((state) => ({
+    data: state.data,
+    fetchAllData: state.fetchAllData,
+  }));
   const { userRole } = useAuth();
   const id = sessionStorage.getItem("userId");
 
   useEffect(() => {
-    if (!parent || parent.length === 0) {
-      fetchParent(id); // Fetch parent data if not available
-    }
-    
-  }, [parent, fetchParent, id]);
+    fetchAllData(id);
+    console.log(data, id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Flex
@@ -41,19 +40,17 @@ function ParentPortal() {
       <Flex
         flexDir={"column"}
         ml={"16px"}
-       justifyContent={'space-between'}
+        justifyContent={"space-between"}
         overflowY={"scroll"}
-        
         pr={"8px"}
-        pt={'8px'}
-        
+        pt={"8px"}
         gap={"10px"}
         w={"100%"}
       >
         <Header />
-          <BreadCrumb />
+        <BreadCrumb />
         <Box flexGrow={"1"}>
-          <Outlet context={parent} />
+          <Outlet context={data} />
         </Box>
         <InnerFooter />
       </Flex>

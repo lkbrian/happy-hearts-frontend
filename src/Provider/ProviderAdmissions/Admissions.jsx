@@ -16,12 +16,13 @@ import {
   useDisclosure,
   useTheme,
 } from "@chakra-ui/react";
-import { EditIcon, Search2Icon } from "@chakra-ui/icons";
+import { EditIcon, Search2Icon, ViewIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import Pagination from "../../Components/Pagination";
 import AddAdmission from "./AddAdmission";
 import EditAdmission from "./EditAdmission";
 import { useProviderStore } from "../../utils/store";
+import ViewAdmission from "./ViewAdmission";
 
 function Admissions() {
   const theme = useTheme();
@@ -49,6 +50,11 @@ function Admissions() {
     isOpen: isEditModal,
     onOpen: onEditModalOpen,
     onClose: onEditModalClose,
+  } = useDisclosure();
+  const {
+    isOpen: isViewModal,
+    onOpen: onViewModalOpen,
+    onClose: onViewModalClose,
   } = useDisclosure();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -127,7 +133,15 @@ function Admissions() {
       </Flex>
       <Table variant="simple">
         <TableCaption>Admissions</TableCaption>
-        <Thead>
+        <Thead
+          sx={{
+            bg: colorMode === "light" ? "#1A202C" : "#ebf2fa",
+            color: colorMode === "light" ? "#ebf2fa" : "#1A202C",
+            th: {
+              color: colorMode === "light" ? "#ebf2fa" : "#1A202C",
+            },
+          }}
+        >
           <Tr>
             <Th>ID</Th>
             <Th>Reason</Th>
@@ -143,20 +157,34 @@ function Admissions() {
               <Tr key={index}>
                 <Td>{admission.admission_id}</Td>
                 <Td>{admission.reason_for_admission}</Td>
-                <Td>{admission.room_id}</Td>
-                <Td>{admission.bed_id}</Td>
+                <Td>{admission.room.room_number}</Td>
+                <Td>{admission.bed.bed_number}</Td>
                 <Td>{admission.admission_date}</Td>
-                <Td>
+                <Td display={"flex"} gap={"22px"}>
                   <EditIcon
-                    size="sm"
+                    size="md"
                     onClick={() => {
                       setElementData(admission); // Set the admission data for editing
                       onEditModalOpen();
                     }}
+                    cursor={"pointer"}
                   />
                   <EditAdmission
                     isOpen={isEditModal}
                     onClose={onEditModalClose}
+                    data={elementData}
+                  />
+                  <ViewIcon
+                    size="20px"
+                    onClick={() => {
+                      setElementData(admission); // Set the admission data for editing
+                      onViewModalOpen();
+                    }}
+                    cursor={"pointer"}
+                  />
+                  <ViewAdmission
+                    isOpen={isViewModal}
+                    onClose={onViewModalClose}
                     data={elementData}
                   />
                 </Td>

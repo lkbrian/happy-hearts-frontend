@@ -1,8 +1,4 @@
-import {
-  HamburgerIcon,
-  MoonIcon,
-   Search2Icon
-} from "@chakra-ui/icons";
+import { HamburgerIcon, MoonIcon, Search2Icon } from "@chakra-ui/icons";
 import {
   Avatar,
   AvatarBadge,
@@ -55,22 +51,22 @@ function Header() {
             display={{ base: "block", xl: "none" }}
           />
           <InputGroup
-          bg={theme.colors.primary[colorMode]}
-          w={"300px"}
-          borderRadius={".4rem"}
-          border={"none"}
-        >
-          <InputLeftElement pointerEvents="none">
-            <Search2Icon color="gray.300" />
-          </InputLeftElement>
-          <Input
-            type="text"
+            bg={theme.colors.primary[colorMode]}
+            w={"300px"}
+            borderRadius={".4rem"}
             border={"none"}
-            outline={"none"}
-            placeholder={"Search...."}
-            aria-label="Search"
-          />
-        </InputGroup>
+          >
+            <InputLeftElement pointerEvents="none">
+              <Search2Icon color="gray.300" />
+            </InputLeftElement>
+            <Input
+              type="text"
+              border={"none"}
+              outline={"none"}
+              placeholder={"Search...."}
+              aria-label="Search"
+            />
+          </InputGroup>
         </Flex>
         <Flex gap={"30px"} align={"center"}>
           <Flex

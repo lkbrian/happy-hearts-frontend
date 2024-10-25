@@ -60,14 +60,14 @@ function EditLabTest({ onClose, isOpen, data }) {
       .oneOf(["Parent", "Child"], "Invalid test_for")
       .required("Provide the entity this test belongs to"),
   });
-  const testBelondto = data?.parent_id === null ? "Child" : "Parent";
+  const testBelongTo = data?.parent_id === null ? "Child" : "Parent";
   const parent_national_id = data?.parent?.national_id ?? "";
   const child_certificate_No = data?.child?.certificate_No ?? "";
   const labtest_id = data?.lab_test_id;
   const provider_id = sessionStorage.getItem("userId");
 
   const initialValues = {
-    test_for: testBelondto,
+    test_for: testBelongTo,
     test_name: data?.test_name ?? "",
     national_id: parent_national_id,
     certificate_No: child_certificate_No,
@@ -124,7 +124,7 @@ function EditLabTest({ onClose, isOpen, data }) {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Add Lab Test</ModalHeader>
+        <ModalHeader>Update Lab Test</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Formik
@@ -286,7 +286,7 @@ function EditLabTest({ onClose, isOpen, data }) {
                     my="8px"
                     isLoading={isSubmitting || loading}
                   >
-                    Submit
+                    Update
                   </Button>
                 </Stack>
               </Form>

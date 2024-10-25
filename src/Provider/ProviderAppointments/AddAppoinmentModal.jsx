@@ -149,6 +149,8 @@ function AddAppoinmentModal({ isOpen, onClose }) {
 
                     <Field name="appointment_date">
                       {({ field, form }) => (
+                        //  today = new Date().toISOString().slice(0, 16);
+
                         <FormControl
                           isInvalid={
                             form.errors.appointment_date &&
@@ -161,6 +163,7 @@ function AddAppoinmentModal({ isOpen, onClose }) {
                             outline={theme.colors.background[colorMode]}
                             type="datetime-local"
                             cursor={"text"}
+                            min={new Date().toISOString().slice(0, 16)}
                             css={{
                               "&::-webkit-calendar-picker-indicator": {
                                 cursor: "pointer",

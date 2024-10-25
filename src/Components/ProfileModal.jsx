@@ -15,10 +15,9 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../utils/AuthContext";
 
 function ProfileModal({ nodeRef }) {
-    const theme = useTheme();
-    const { colorMode } = useColorMode();
+  const theme = useTheme();
+  const { colorMode } = useColorMode();
   const { logout } = useAuth();
-
 
   const handleClick = async () => {
     await logout();
@@ -39,7 +38,13 @@ function ProfileModal({ nodeRef }) {
       borderRadius={".4rem"}
     >
       <Stack
-        divider={<StackDivider borderColor={colorMode==='light'?"#d4d4d4":"#2D3748"} px={'2px'} borderStyle={"dashed"} />}
+        divider={
+          <StackDivider
+            borderColor={colorMode === "light" ? "#d4d4d4" : "#2D3748"}
+            px={"2px"}
+            borderStyle={"dashed"}
+          />
+        }
       >
         <Flex gap={"16px"} padding={"8px 10px"}>
           <Box>
@@ -63,10 +68,10 @@ function ProfileModal({ nodeRef }) {
             gap={"6px"}
             cursor={"pointer"}
             alignItems={"center"}
-            _hover={{ color: "#2179F3", bg:theme.colors.sidebar[colorMode] }}
+            _hover={{ color: "#2179F3", bg: theme.colors.sidebar[colorMode] }}
           >
             <CgProfile color="#2179F3" size={"20px"} />
-            <Link to={"#"}>My profile</Link>
+            <Link to={"/account/profile-settings#profile"}>My profile</Link>
           </Flex>
           <Flex
             w={"auto"}
@@ -74,10 +79,10 @@ function ProfileModal({ nodeRef }) {
             gap={"6px"}
             cursor={"pointer"}
             alignItems={"center"}
-            _hover={{ color: "#2179F3", bg:theme.colors.sidebar[colorMode] }}
+            _hover={{ color: "#2179F3", bg: theme.colors.sidebar[colorMode] }}
           >
             <LuSettings color="#2179F3" size={"20px"} />
-            <Link to={"#"}>Settings</Link>
+            <Link to={"/account/profile-settings#settings"}>Settings</Link>
           </Flex>
           <Flex
             w={"auto"}
@@ -85,7 +90,7 @@ function ProfileModal({ nodeRef }) {
             gap={"6px"}
             cursor={"pointer"}
             alignItems={"center"}
-            _hover={{ color: "#2179F3", bg:theme.colors.sidebar[colorMode] }}
+            _hover={{ color: "#2179F3", bg: theme.colors.sidebar[colorMode] }}
           >
             <BsInfoCircle color="#2179F3" size={"20px"} />
             <Link to={"#"}>Support</Link>
@@ -98,7 +103,7 @@ function ProfileModal({ nodeRef }) {
             gap={"6px"}
             cursor={"pointer"}
             alignItems={"center"}
-            _hover={{ color: "#2179F3", bg:theme.colors.sidebar[colorMode] }}
+            _hover={{ color: "#2179F3", bg: theme.colors.sidebar[colorMode] }}
           >
             <CgLogOut color="#2179F3" size={"20px"} />
             <Text>Logout</Text>
