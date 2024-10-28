@@ -4,7 +4,6 @@ import {
   Flex,
   Heading,
   Icon,
-  Spinner,
   Stat,
   StatLabel,
   StatNumber,
@@ -40,12 +39,12 @@ import { GiHypodermicTest, GiTwoCoins } from "react-icons/gi";
 import { useOutletContext } from "react-router";
 import AdmissionsChart from "../Charts/AdmissionsChart";
 import DonutChart from "../Charts/DonutChart";
-import Users from "./Users/Users";
+import Users from "../Tables/Users";
 
 function UserDashboard() {
   const theme = useTheme();
   const { colorMode } = useColorMode();
-  const { data, loading } = useOutletContext();
+  const data = useOutletContext();
 
   // const [dashData, setDashData] = useState(null);
   const [isMore, setIsMore] = useState(false);
@@ -73,15 +72,6 @@ function UserDashboard() {
     admissions: FaHospitalUser,
     beds: FaBed,
   };
-
-  if (loading) {
-    return (
-      <Flex justifyContent="center" alignItems="center" h="100vh">
-        <Spinner size="xl" />
-        <Text>Loading ...</Text>
-      </Flex>
-    );
-  }
 
   return (
     <Box

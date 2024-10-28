@@ -60,7 +60,6 @@ function ForgotPassword() {
             color: "#fff",
           },
         });
-        console.log(data);
       } else {
         const errorData = await response.json();
         toast.error(errorData.msg || "An error occurred", {

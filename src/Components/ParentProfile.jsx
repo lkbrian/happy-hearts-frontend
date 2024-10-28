@@ -89,22 +89,19 @@ function ParentProfile() {
         body: JSON.stringify(values),
       });
 
-      console.log("Response status:", response.status); // Log response status
-
       if (response.ok) {
-        const res = await response.json();
-        console.log("Response res:", res);
-        toast.success("Personal informantion updated!", {
+        const data = await response.json();
+        toast.success(data.msg || "Personal informantion updated!", {
           position: "top-right",
           autoClose: 6000,
         });
       } else {
-        const errorData = await response.json();
-        toast.error("An error occurred", {
+        const err = await response.json();
+        toast.error(err.msg || "An error occurred", {
           position: "top-right",
           autoClose: 6000,
         });
-        throw new Error(errorData.msg || "An error occurred");
+        throw new Error(err.msg || "An error occurred");
       }
     } catch (error) {
       console.error("Error submitting form:", error);

@@ -60,9 +60,13 @@ export const AuthProvider = ({ children }) => {
         } else {
           navigate(`/users/portal/dashboard`);
         }
-      } else {
-        const errorData = response.data;
-        toast.error(errorData.msg || "An error occurred", {
+      }
+    } catch (error) {
+      // Display a toast notification based on the error type
+      if (error.response) {
+        // Server responded with a status code out of the 2xx range
+        const errorMessage = error.response.data.msg || "An error occurred";
+        toast.error(`Error ${error.response.status}: ${errorMessage}`, {
           position: "top-right",
           autoClose: 6000,
           style: {
@@ -71,11 +75,29 @@ export const AuthProvider = ({ children }) => {
             color: "#fff",
           },
         });
-        throw new Error(errorData.msg || "An error occurred");
+      } else if (error.request) {
+        // Request was made, but no response received
+        toast.error("Network error. Please check your connection.", {
+          position: "top-right",
+          autoClose: 6000,
+          style: {
+            borderRadius: "10px",
+            background: "#101f3c",
+            color: "#fff",
+          },
+        });
+      } else {
+        // Something else caused the error
+        toast.error(`Unexpected error: ${error.message}`, {
+          position: "top-right",
+          autoClose: 6000,
+          style: {
+            borderRadius: "10px",
+            background: "#101f3c",
+            color: "#fff",
+          },
+        });
       }
-    } catch (error) {
-      console.error("Error logging in:", error);
-      return { success: false, message: "Invalid username or password" };
     }
   };
 

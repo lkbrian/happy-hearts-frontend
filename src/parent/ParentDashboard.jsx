@@ -15,7 +15,7 @@ import {
   useColorMode,
   useTheme,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import { FaCalendarAlt, FaFileAlt, FaPills } from "react-icons/fa";
 import { useOutletContext } from "react-router";
@@ -30,12 +30,12 @@ import {
   FaTruckMedical,
 } from "react-icons/fa6";
 import { GiHypodermicTest, GiTwoCoins } from "react-icons/gi";
+import { useParentStore } from "../utils/store";
 // import MedicationsTable from "./MedicationsTable";
 // import ChildrensTable from "./ChildrensTable";
 function ParentDashboard() {
   const data = useOutletContext();
-  const appointments = data?.appointments;
-  console.log(appointments, "appointments");
+  const appointments = data.appointments;
   const [date, setDate] = useState(new Date());
   const options = {
     weekday: "long",
@@ -64,6 +64,17 @@ function ParentDashboard() {
     discharge_summaries: FaClipboardList,
     admissions: FaHospitalUser,
   };
+  const { parent, fetchParent } = useParentStore((state) => ({
+    parent: state.parent,
+    fetchParent: state.fetchParent,
+  }));
+
+  const id = sessionStorage.getItem("userId");
+
+  useEffect(() => {
+    fetchParent(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <Flex gap={"20px"} flexDir={"column"}>
       <Box
@@ -83,7 +94,7 @@ function ParentDashboard() {
         <Box color={"#fff"} w={{ base: "100%", md: "50%" }}>
           <Text>{date.toLocaleDateString("en-US", options)}</Text>
           <Text fontSize={"22px"} fontWeight={"600"}>
-            Welcome Back, {data.name}
+            Welcome Back, {parent.name}
           </Text>
           <Text>
             prioritize your childs health with timely and effective

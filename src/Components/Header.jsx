@@ -11,11 +11,12 @@ import {
   useColorMode,
   useTheme,
 } from "@chakra-ui/react";
-import useToggle from "../utils/useToggle";
-import ProfileModal from "./ProfileModal";
 import { AiFillSun } from "react-icons/ai";
+import { FaEnvelope } from "react-icons/fa6";
 import useDisclose from "../utils/useDisclose";
+import useToggle from "../utils/useToggle";
 import Drawer from "./Drawer";
+import ProfileModal from "./ProfileModal";
 
 function Header() {
   const theme = useTheme();
@@ -71,7 +72,7 @@ function Header() {
         <Flex gap={"30px"} align={"center"}>
           <Flex
             align={"center"}
-            gap={"5px"}
+            gap={"15px"}
             onClick={toggleColorMode}
             cursor={"pointer"}
           >
@@ -91,6 +92,7 @@ function Header() {
                 color={theme.colors.icon[colorMode]}
               />
             )}
+            <FaEnvelope color={theme.colors.text[colorMode]} size={"22px"} />
           </Flex>
           <Avatar
             // icon={<AiOutlineUser fontSize="1.5rem" />}

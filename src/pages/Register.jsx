@@ -75,11 +75,8 @@ const Register = () => {
         body: JSON.stringify(values),
       });
 
-      console.log("Response status:", response.status); // Log response status
-
       if (response.ok) {
         const data = await response.json();
-        console.log("Response data:", data);
         toast.success(data.msg || "Success!", {
           position: "top-right",
           autoClose: 6000,
@@ -290,7 +287,9 @@ const Register = () => {
                   w="100%"
                   type="submit"
                   bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
-                  _hover={{bg:'linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)'}}
+                  _hover={{
+                    bg: "linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)",
+                  }}
                   color="#fff"
                   mt="8px"
                   isLoading={isSubmitting}

@@ -11,8 +11,8 @@ import PropTypes from "prop-types";
 import { BsInfoCircle } from "react-icons/bs";
 import { CgLogOut, CgProfile } from "react-icons/cg";
 import { LuSettings } from "react-icons/lu";
-import { Link } from "react-router-dom";
 import { useAuth } from "../utils/AuthContext";
+import { NavLink } from "react-router-dom";
 
 function ProfileModal({ nodeRef }) {
   const theme = useTheme();
@@ -64,25 +64,29 @@ function ProfileModal({ nodeRef }) {
         <Box fontSize={"15px"} fontWeight={"500"}>
           <Flex
             w={"auto"}
+            as={NavLink}
             p={2}
             gap={"6px"}
             cursor={"pointer"}
+            to={"/account/profile-settings"}
             alignItems={"center"}
             _hover={{ color: "#2179F3", bg: theme.colors.sidebar[colorMode] }}
           >
             <CgProfile color="#2179F3" size={"20px"} />
-            <Link to={"/account/profile-settings#profile"}>My profile</Link>
+            <Text>My profile</Text>
           </Flex>
           <Flex
             w={"auto"}
             p={2}
+            as={NavLink}
             gap={"6px"}
+            to={"/account/profile-settings"}
             cursor={"pointer"}
             alignItems={"center"}
             _hover={{ color: "#2179F3", bg: theme.colors.sidebar[colorMode] }}
           >
             <LuSettings color="#2179F3" size={"20px"} />
-            <Link to={"/account/profile-settings#settings"}>Settings</Link>
+            <Text>Settings</Text>
           </Flex>
           <Flex
             w={"auto"}
@@ -93,7 +97,7 @@ function ProfileModal({ nodeRef }) {
             _hover={{ color: "#2179F3", bg: theme.colors.sidebar[colorMode] }}
           >
             <BsInfoCircle color="#2179F3" size={"20px"} />
-            <Link to={"#"}>Support</Link>
+            <NavLink to={"#"}>Support</NavLink>
           </Flex>
           <Box
             onClick={handleClick}

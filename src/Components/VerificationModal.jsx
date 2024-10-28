@@ -1,7 +1,9 @@
 import {
   Button,
+  Flex,
   FormControl,
   FormErrorMessage,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -9,58 +11,66 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  PinInput,
-  PinInputField,
   Spinner,
-  Stack,
+  // Stack,
   Text,
   useColorMode,
   useTheme,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
+import { useAuth } from "../utils/AuthContext";
 
 function VerificationModal({ isOpen, onClose, email }) {
+  const [loading, setLoading] = useState(false);
   const theme = useTheme();
   const { colorMode } = useColorMode();
-
-  const [loading, setLoading] = useState(false);
+  const { logout } = useAuth();
 
   const validationSchema = Yup.object({
-    token: Yup.string()
-      .required("Token is required")
-      .length(5, "Token must be exactly 5 digits"),
+    pin_one: Yup.string().required(""),
+    pin_two: Yup.string().required(""),
+    pin_three: Yup.string().required(""),
+    pin_four: Yup.string().required(""),
+    pin_five: Yup.string().required(""),
   });
 
   const initialValues = {
     token: "",
+    pin_one: "",
+    pin_two: "",
+    pin_three: "",
+    pin_four: "",
+    pin_five: "",
   };
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    console.log("Submitting form with values: ", values);
     setLoading(true);
-    const { token } = values;
-
+    const { pin_one, pin_two, pin_three, pin_four, pin_five } = values;
+    const code = String(pin_one + pin_two + pin_three + pin_four + pin_five);
     try {
-      const response = await fetch(`/api/verifyemail/${email}/${token}`, {
+      const response = await fetch(`/api/verifyemail/${email}/${code}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ token: code }),
       });
-      console.log("Response status:", response.status);
 
       if (response.ok) {
         const res = await response.json();
-        console.log("Response res:", res);
-        toast.success(res.msg || "Child created successfully!", {
+        toast.success(res.msg || "Email updated sucessfully", {
           position: "top-right",
           autoClose: 6000,
         });
-        onClose();
+        sessionStorage.setItem("userEmail", email);
+
+        setTimeout(() => {
+          logout();
+        }, 2000);
       } else {
         const errorData = await response.json();
         toast.error(errorData.msg || "error encountered", {
@@ -69,20 +79,29 @@ function VerificationModal({ isOpen, onClose, email }) {
         });
         throw new Error(errorData.msg || "An error occurred");
       }
-      onClose();
     } catch (error) {
       console.error("Error submitting form:", error);
-      onClose();
     } finally {
       setSubmitting(false);
       setLoading(false);
       resetForm();
-      setTimeout(() => {
-        window.location.refresh();
-      }, 4000);
+      // setTimeout(() => {
+      //   window.location.refresh();
+      // }, 4000);
     }
   };
+  const pinRefs = useRef([]);
+  const move = (event, prev, current, next) => {
+    const length = current.value.length;
+    const maxlength = current.maxLength;
 
+    if (length === maxlength && next) {
+      next.focus();
+    }
+    if (event.key === "Backspace" && length === 0 && prev) {
+      prev.focus();
+    }
+  };
   return (
     <>
       <Modal
@@ -91,6 +110,7 @@ function VerificationModal({ isOpen, onClose, email }) {
         isOpen={isOpen}
         motionPreset="slideInBottom"
         size={"xl"}
+        bg={theme.colors.sidebar[colorMode]}
       >
         <ModalOverlay />
         <ModalContent>
@@ -105,47 +125,53 @@ function VerificationModal({ isOpen, onClose, email }) {
             >
               {({ isSubmitting }) => (
                 <Form>
-                  <Stack spacing={6} p="10px">
-                    <Field name="token">
-                      {({ field, form }) => (
-                        <FormControl
-                          isInvalid={form.errors.token && form.touched.token}
-                        >
-                          <Text>
-                            Verification Code was sent to you old email please
-                            enter to verify your account and change your Email
-                          </Text>
-                          <PinInput>
-                            <PinInputField
-                              outline={theme.colors.background[colorMode]}
+                  <Text>
+                    Verification Code was sent to you old email please enter to
+                    verify your account and change your Email
+                  </Text>
+                  <Flex gap={"2px"} p="20px" pb={"40px"} align={"center"}>
+                    {[
+                      "pin_one",
+                      "pin_two",
+                      "pin_three",
+                      "pin_four",
+                      "pin_five",
+                    ].map((name, index) => (
+                      <Field name={name} key={index}>
+                        {({ field, form }) => (
+                          <FormControl
+                            isInvalid={form.errors[name] && form.touched[name]}
+                          >
+                            <Input
+                              ref={(el) => (pinRefs.current[index] = el)}
+                              onKeyUp={(e) =>
+                                move(
+                                  e,
+                                  pinRefs.current[index - 1] || null,
+                                  pinRefs.current[index],
+                                  pinRefs.current[index + 1] || null
+                                )
+                              }
                               {...field}
+                              w={"50px"}
+                              h={"60px"}
+                              maxLength="1"
+                              fontSize={"20px"}
+                              fontWeight={"bold"}
+                              outline={"#2179f3"}
+                              border={"2px solid #2179f3"}
                             />
-                            <PinInputField
-                              outline={theme.colors.background[colorMode]}
-                              {...field}
-                            />
-                            <PinInputField
-                              outline={theme.colors.background[colorMode]}
-                              {...field}
-                            />
-                            <PinInputField
-                              outline={theme.colors.background[colorMode]}
-                              {...field}
-                            />
-                            <PinInputField
-                              outline={theme.colors.background[colorMode]}
-                              {...field}
-                            />
-                          </PinInput>
-                          <FormErrorMessage>
-                            {form.errors.token}
-                          </FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
-                  </Stack>
+                            <FormErrorMessage>
+                              {form.errors[name]}
+                            </FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                    ))}
+                  </Flex>
                   <Button
                     w="100%"
+                    m={"auto"}
                     type="submit"
                     bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
                     _hover={{
@@ -163,7 +189,7 @@ function VerificationModal({ isOpen, onClose, email }) {
           </ModalBody>
           <ModalFooter>
             <small>
-              Note: that closing this modal will render the code useless as a
+              Note: that closing this modal will render the code useless. As a
               new one gets generated and your email won&apos;t be changed
             </small>
           </ModalFooter>{" "}

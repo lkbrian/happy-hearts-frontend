@@ -9,24 +9,24 @@ const theme = extendTheme({
   config,
   colors: {
     primary: {
-      light: "#ebf2fa", 
-      dark: "#2D3748", 
+      light: "#ebf2fa",
+      dark: "#2D3748",
     },
     text: {
-      light: "#47556A", 
+      light: "#47556A",
       dark: "#fff",
     },
     background: {
-      light: "#fff", 
-      dark: "#1A202C", 
+      light: "#fff",
+      dark: "#1A202C",
     },
     cards: {
-      light: "#fff", 
-      dark: "#2D3748", 
+      light: "#fff",
+      dark: "#2D3748",
     },
     splash: {
-      light: "#fff", 
-      dark: "#1A202C", 
+      light: "#fff",
+      dark: "#1A202C",
     },
     icon: {
       light: "#47556A",
@@ -35,6 +35,10 @@ const theme = extendTheme({
     sidebar: {
       light: "#ebf2fa",
       dark: "#2D3748",
+    },
+    scrollbar: {
+      light: "#cee5f2",
+      dark: "#6c757d",
     },
   },
   fonts: {

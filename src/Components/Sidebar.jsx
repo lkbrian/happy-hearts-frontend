@@ -30,11 +30,15 @@ function Sidebar({ userRole }) {
       h={"100vh"}
       bg={theme.colors.background[colorMode]}
       w="250px"
+      overflowY={"scroll"}
       minW={"250px"}
       zIndex="1"
       display={{ base: "none", xl: "flex" }}
       flexDir={"column"}
       justify={"space-between"}
+      pb={"30px"}
+      className="scrollbar"
+      mr={0}
     >
       {/* Logo and Clinic Name */}
       <Flex

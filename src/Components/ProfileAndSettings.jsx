@@ -9,13 +9,13 @@ import {
   useTheme,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
 import "react-toastify/dist/ReactToastify.css";
 import Privacy from "../pages/Privacy";
 import TermsAndConditions from "../pages/TermsAndConditions";
 import ParentProfile from "./ParentProfile";
 import ProviderProfile from "./ProviderProfile";
 import UserProfile from "./UserProfile";
+import Settings from "./Settings";
 
 function ProfileAndSettings() {
   const theme = useTheme();
@@ -59,38 +59,12 @@ function ProfileAndSettings() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userRole]);
 
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  // Determine initial tab based on query param or default to 0
-  const tabFromUrl = new URLSearchParams(location.search).get("tab");
-  const initialTabIndex = tabFromUrl === "settings" ? 1 : 0;
-  const [tabIndex, setTabIndex] = useState(initialTabIndex);
-
-  // Update tabIndex state if the URL query param changes
-  useEffect(() => {
-    const tabFromUrl = new URLSearchParams(location.search).get("tab");
-    setTabIndex(tabFromUrl === "settings" ? 1 : 0);
-  }, [location]);
-
-  // Change URL when user switches tabs
-  const handleTabChange = (index) => {
-    setTabIndex(index);
-    navigate(
-      index === 1
-        ? "/account/profile-settings?tab=settings"
-        : "/account/profile-settings?tab=profile"
-    );
-  };
-
   return (
     <Tabs
       bg={theme.colors.background[colorMode]}
       p={"10px"}
       borderRadius={".4rem"}
       h={"auto"}
-      index={tabIndex}
-      onChange={handleTabChange}
     >
       <TabList borderBottomWidth="0" spacing={"20px"}>
         <Tab
@@ -138,7 +112,9 @@ function ProfileAndSettings() {
           <Privacy />
         </TabPanel>
 
-        <TabPanel></TabPanel>
+        <TabPanel>
+          <Settings />
+        </TabPanel>
       </TabPanels>
     </Tabs>
   );

@@ -9,7 +9,6 @@ import {
   Image,
   Stack,
   Stat,
-  StatGroup,
   StatLabel,
   StatNumber,
   Text,
@@ -18,19 +17,27 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import Calendar from "react-calendar";
-import { FaCalendarAlt, FaPills } from "react-icons/fa";
+import { FaCalendarAlt, FaFileAlt, FaHistory, FaPills } from "react-icons/fa";
 import { useOutletContext } from "react-router";
 import {
+  FaBabyCarriage,
+  FaCapsules,
+  FaChild,
+  FaChildren,
+  FaClipboardCheck,
+  FaClipboardList,
+  FaFileMedical,
+  FaFlask,
   FaHospitalUser,
   FaPrescriptionBottle,
   FaTruckMedical,
+  FaUsers,
 } from "react-icons/fa6";
-import { GiHypodermicTest, GiTestTubes, GiTwoCoins } from "react-icons/gi";
+import { GiHypodermicTest, GiTwoCoins } from "react-icons/gi";
 function ProviderDashboard() {
   const data = useOutletContext();
-  // console.log("contextual data",data);
   const [date, setDate] = useState(new Date());
-  const appointments = data?.appointments.slice(-2);
+  const appointments = data.appointments.slice(-2);
   const options = {
     weekday: "long",
     year: "numeric",
@@ -39,24 +46,27 @@ function ProviderDashboard() {
   };
   const theme = useTheme();
   const { colorMode } = useColorMode();
-  const counts = {
-    appointments: data?.appointments?.length ?? 0,
-    discharge_summaries: data?.discharge_summaries?.length ?? 0,
-    deliveries: data?.delivery?.length ?? 0,
-    // medications: data?.medications?.length ?? 0,
-    vaccinations: data?.vaccination_records?.length ?? 0,
-    prescriptions: data?.prescriptions?.length ?? 0,
-    labtests: data?.lab_tests?.length ?? 0,
-  };
+
   const icons = {
-    appointments: FaCalendarAlt,
-    discharge_summaries: FaHospitalUser,
-    deliveries: FaTruckMedical,
-    medications: FaPills,
-    vaccinations: GiHypodermicTest,
+    providers: FaUsers,
+    vaccines: GiHypodermicTest,
+    discharge_medications: FaPills,
+    parents_medical_info: FaFileMedical,
     payments: GiTwoCoins,
+    present_pregnancies: FaBabyCarriage,
+    previous_pregnancies: FaHistory,
+    vacination_records: FaClipboardCheck,
+    medicines: FaCapsules,
     prescriptions: FaPrescriptionBottle,
-    labtests: GiTestTubes,
+    parents: FaChild,
+    documents: FaFileAlt,
+    children: FaChildren,
+    FaChildren,
+    lab_tests: FaFlask,
+    appointments: FaCalendarAlt,
+    deliveries: FaTruckMedical,
+    discharge_summaries: FaClipboardList,
+    admissions: FaHospitalUser,
   };
 
   return (
@@ -129,9 +139,9 @@ function ProviderDashboard() {
             justifyContent={{ base: "center", xl: "start" }}
             m="auto"
           >
-            {Object.keys(counts).map((key, index) => (
-              <StatGroup
-                key={index}
+            {Object.keys(data).map((key) => (
+              <Stat
+                key={key}
                 borderRadius="md"
                 boxShadow="lg"
                 minW="250px"
@@ -142,17 +152,14 @@ function ProviderDashboard() {
                 bg="linear-gradient(to bottom right, rgba(33,121,243,1) 45%, rgba(65,202,227,1) 100%)"
                 color="#fff"
               >
-                <Stat>
-                  {/* Icon */}
-                  {/* Label */}{" "}
-                  <StatNumber fontSize="40px">{counts[key]}</StatNumber>
-                  <StatLabel textTransform="capitalize">
-                    {key.replace(/([A-Z])/g, " $1")}
-                  </StatLabel>
-                  <Icon as={icons[key]} boxSize={8} mb={2} />
-                  {/* Count */}
-                </Stat>
-              </StatGroup>
+                <StatNumber fontSize="40px">
+                  {data[key]?.length ?? 0}
+                </StatNumber>
+                <StatLabel textTransform="capitalize">
+                  {key.replace(/_/g, " ")}
+                </StatLabel>
+                <Icon as={icons[key]} boxSize={8} mb={2} />
+              </Stat>
             ))}
           </Flex>
         </GridItem>
@@ -180,16 +187,16 @@ function ProviderDashboard() {
                 Upcoming Appointments
               </Text>
 
-              <Stack>
-                {appointments.length > 0 ? (
-                  appointments.map((data, index) => (
+              {appointments && appointments.length > 0 ? (
+                <Stack>
+                  {appointments.map((data, index) => (
                     <Flex
                       key={index}
                       p="8px"
                       borderBottom="1px solid #d4d4d4"
                       display="flex"
                       justifyContent="space-between"
-                      flexWrap={"wrap"}
+                      flexWrap="wrap"
                     >
                       <Box>
                         <Text>{data.reason}</Text>
@@ -198,22 +205,21 @@ function ProviderDashboard() {
                         </Text>
                         <Text
                           fontSize="15px"
-                          style={{
-                            color:
-                              data.status === "pending"
-                                ? "#F9B264"
-                                : data.status === "approved"
-                                ? "#3fc49e"
-                                : data.status === "visited"
-                                ? "#228B22"
-                                : data.status === "rejected"
-                                ? "crimson"
-                                : data.status === "awaiting_approval"
-                                ? "#2179F3"
-                                : data.status === "missed"
-                                ? "crimson"
-                                : "gray.500", // default color if none of the statuses match
-                          }}
+                          color={
+                            data.status === "pending"
+                              ? "#F9B264"
+                              : data.status === "approved"
+                              ? "#3fc49e"
+                              : data.status === "visited"
+                              ? "#228B22"
+                              : data.status === "rejected"
+                              ? "crimson"
+                              : data.status === "awaiting_approval"
+                              ? "#2179F3"
+                              : data.status === "missed"
+                              ? "crimson"
+                              : "gray.500" // default color if none of the statuses match
+                          }
                         >
                           {data.status}
                         </Text>
@@ -228,17 +234,16 @@ function ProviderDashboard() {
                             day: "2-digit",
                             hour: "2-digit",
                             minute: "2-digit",
-                            second: undefined,
                             hour12: false,
                           }
                         )}
                       </Text>
                     </Flex>
-                  ))
-                ) : (
-                  <Text>No appointments available</Text>
-                )}
-              </Stack>
+                  ))}
+                </Stack>
+              ) : (
+                <Text>No appointments available</Text>
+              )}
             </Box>
           </Box>
         </GridItem>

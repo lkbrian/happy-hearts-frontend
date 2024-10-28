@@ -6,7 +6,7 @@ import Header from "../Components/Header";
 import InnerFooter from "../Components/InnerFooter";
 import { useAuth } from "../utils/AuthContext";
 import { useParentsStore } from "../utils/store";
-import BreadCrumb from "../Components/BreadCrumb";
+// import BreadCrumb from "../Components/BreadCrumb";
 
 function ParentPortal() {
   const theme = useTheme();
@@ -21,7 +21,6 @@ function ParentPortal() {
 
   useEffect(() => {
     fetchAllData(id);
-    console.log(data, id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -48,7 +47,7 @@ function ParentPortal() {
         w={"100%"}
       >
         <Header />
-        <BreadCrumb />
+        {/* <BreadCrumb /> */}
         <Box flexGrow={"1"}>
           <Outlet context={data} />
         </Box>

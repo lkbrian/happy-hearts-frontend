@@ -86,7 +86,6 @@ function ResetPassword() {
             color: "#fff",
           },
         });
-        console.log(data);
         navigate("/login");
       } else {
         const errorData = await response.json();

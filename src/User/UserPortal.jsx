@@ -12,9 +12,8 @@ function UserPortal() {
   const theme = useTheme();
   const { colorMode } = useColorMode();
 
-  const { data, loading, fetchAllData } = useUsersStore((state) => ({
+  const { data, fetchAllData } = useUsersStore((state) => ({
     data: state.data,
-    loading: state.loading,
     fetchAllData: state.fetchAllData,
   }));
   useEffect(() => {
@@ -45,7 +44,7 @@ function UserPortal() {
       >
         <Header />
         <Box flexGrow={"1"}>
-          <Outlet context={{ data, loading }} />
+          <Outlet context={data} />
         </Box>
         <InnerFooter />
       </Flex>

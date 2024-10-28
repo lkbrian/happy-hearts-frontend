@@ -13,8 +13,8 @@ function InnerFooter() {
         gap={"20px"}
         className="inner-footer"
         // p={".4rem"}
-        // py={"20px"}
-        // pt={"20px"}
+        py={"20px"}
+        pt={"20px"}
         mt="auto"
         // mb={"-32px"}
         borderRadius={"0.7rem"}

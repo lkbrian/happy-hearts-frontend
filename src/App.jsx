@@ -8,30 +8,31 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ResetPassword from "./pages/ResetPassword";
 import Splash from "./pages/Splash";
-import Antinatal from "./parent/Antinatal";
-import Appointments from "./parent/Appointments/Appointments";
-import ChildInfo from "./parent/ChildInfo";
-import Medications from "./parent/Medications";
 import ParentDashboard from "./parent/ParentDashboard";
 import ParentPortal from "./parent/ParentPortal";
-import Prenatal from "./parent/Prenatal";
-import ProviderAdmissions from "./Provider/ProviderAdmissions/Admissions";
-import ProviderAppointments from "./Provider/ProviderAppointments/Appointments";
 import ProviderDashboard from "./Provider/ProviderDashboard";
-import ProviderDeliveries from "./Provider/ProviderDeliveries/Deliveries";
-import ProviderDischargeSummaries from "./Provider/ProviderDischargeSummaries/DischargeSummaries";
-import ProviderLabTests from "./Provider/ProviderLabTests/LabTests";
 import ProvidersPortal from "./Provider/ProvidersPortal";
-import UserAppointments from "./User/Appointments/UserAppointments";
-import Facilities from "./User/Facilities";
-import Medicines from "./User/Medicine/Medicines";
-import Providers from "./User/ProviderManagement/Providers";
+import Admissions from "./Tables/Admissions";
+import Births from "./Tables/Births";
+import Children from "./Tables/Children";
+import Deliveries from "./Tables/Deliveries";
+import Discharges from "./Tables/Discharges";
+import Facilities from "./Tables/Facilities";
+import LabTests from "./Tables/LabTests";
+import MedicalInfo from "./Tables/MedicalInfo";
+import Medications from "./Tables/Medications";
+import Medicines from "./Tables/Medicines";
+import PresentPregnancy from "./Tables/PresentPregnancy";
+import PreviousPregnancy from "./Tables/PreviousPregnancy";
+import Providers from "./Tables/Providers";
+import Users from "./Tables/Users";
+import VaccinationRecords from "./Tables/VaccinationRecords";
+import Vaccines from "./Tables/Vaccines";
 import UserDashboard from "./User/UserDashboard";
 import UserPortal from "./User/UserPortal";
-import Users from "./User/Users/Users";
-import Vaccines from "./User/Vaccines/Vaccines";
 import { AuthProvider, useAuth } from "./utils/AuthContext";
 import AuthenticatedRoutes from "./utils/AuthenticatedRoutes";
+import Appointments from "./Tables/Appointments";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -52,30 +53,52 @@ function App() {
               path="/parents/portal/dashboard"
               element={<ParentDashboard />}
             />
-            <Route path="/parents/portal/prenatal" element={<Prenatal />} />
-            <Route path="/parents/portal/antinatal" element={<Antinatal />} />
+            <Route
+              path="/parents/portal/appointments"
+              element={<Appointments />}
+            />
+            <Route path="/parents/portal/admissions" element={<Admissions />} />
+            <Route path="/parents/portal/births" element={<Births />} />
+            <Route path="/parents/portal/children" element={<Children />} />
+            <Route path="/parents/portal/deliveries" element={<Deliveries />} />
+            <Route path="/parents/portal/discharges" element={<Discharges />} />
+            <Route path="/parents/portal/labtests" element={<LabTests />} />
             <Route
               path="/parents/portal/medications"
               element={<Medications />}
             />
-            <Route path="/parents/portal/child-info" element={<ChildInfo />} />
             <Route
-              path="/parents/portal/appointments"
-              element={<Appointments />}
+              path="/parents/portal/medical-info"
+              element={<MedicalInfo />}
+            />
+            <Route
+              path="/parents/portal/prescriptions"
+              element={<Medicines />}
+            />
+            <Route
+              path="/parents/portal/present-pregnancy"
+              element={<PresentPregnancy />}
+            />
+            <Route
+              path="/parents/portal/previous-pregnancy"
+              element={<PreviousPregnancy />}
+            />
+            <Route
+              path="/parents/portal/vaccination-records"
+              element={<VaccinationRecords />}
             />
             <Route
               path="/account/profile-settings"
               element={<ProfileAndSettings />}
             />
           </Route>
-
           {/* User portal routes */}
           <Route element={<UserPortal />}>
             <Route path="/users/portal/dashboard" element={<UserDashboard />} />
             <Route path="/users/portal/user-management" element={<Users />} />
             <Route
               path="/users/portal/appointment-management"
-              element={<UserAppointments />}
+              element={<Appointments />}
             />
             <Route
               path="/users/portal/medicine-management"
@@ -85,7 +108,6 @@ function App() {
               path="/users/portal/vaccine-management"
               element={<Vaccines />}
             />
-            {/* <Route path="/users/portal/fac-management" element={<Users />} /> */}
             <Route
               path="/users/portal/facilities-management"
               element={<Facilities />}
@@ -93,6 +115,43 @@ function App() {
             <Route
               path="/users/portal/provider-management"
               element={<Providers />}
+            />
+            <Route
+              path="/users/portal/admissions-management"
+              element={<Admissions />}
+            />
+            <Route path="/users/portal/children" element={<Children />} />
+            <Route
+              path="/users/portal/deliveries-management"
+              element={<Deliveries />}
+            />
+            <Route
+              path="/users/portal/discharge-management"
+              element={<Discharges />}
+            />
+            <Route
+              path="/users/portal/labtests-management"
+              element={<LabTests />}
+            />
+            <Route
+              path="/users/portal/medications-management"
+              element={<Medications />}
+            />
+            <Route
+              path="/users/portal/medical-info"
+              element={<MedicalInfo />}
+            />
+            <Route
+              path="/users/portal/present-pregnancy"
+              element={<PresentPregnancy />}
+            />
+            <Route
+              path="/users/portal/previous-pregnancy"
+              element={<PreviousPregnancy />}
+            />
+            <Route
+              path="/users/portal/vaccination-records"
+              element={<VaccinationRecords />}
             />
             <Route
               path="/account/profile-settings"
@@ -108,23 +167,51 @@ function App() {
             />
             <Route
               path="/providers/portal/appointment-management"
-              element={<ProviderAppointments />}
+              element={<Appointments />}
             />
             <Route
               path="/providers/portal/labtests-management"
-              element={<ProviderLabTests />}
+              element={<LabTests />}
             />
             <Route
               path="/providers/portal/deliveries-management"
-              element={<ProviderDeliveries />}
+              element={<Deliveries />}
             />
             <Route
               path="/providers/portal/dischargesummary-management"
-              element={<ProviderDischargeSummaries />}
+              element={<Discharges />}
             />
             <Route
               path="/providers/portal/admissions-management"
-              element={<ProviderAdmissions />}
+              element={<Admissions />}
+            />
+            <Route
+              path="/providers/portal/medicine-management"
+              element={<Medicines />}
+            />
+            <Route
+              path="/providers/portal/medications-management"
+              element={<Medications />}
+            />
+            <Route
+              path="/providers/portal/medical-info"
+              element={<MedicalInfo />}
+            />
+            <Route
+              path="/providers/portal/present-pregnancy"
+              element={<PresentPregnancy />}
+            />
+            <Route
+              path="/providers/portal/previous-pregnancy"
+              element={<PreviousPregnancy />}
+            />
+            <Route
+              path="/providers/portal/vaccine-management"
+              element={<Vaccines />}
+            />
+            <Route
+              path="/providers/portal/vaccination-records"
+              element={<VaccinationRecords />}
             />
             <Route
               path="/account/profile-settings"

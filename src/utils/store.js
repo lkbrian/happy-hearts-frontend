@@ -26,7 +26,6 @@ export const useParentStore = create((set) => ({
       if (!res.ok) throw new Error(`HTTP Error! status: ${res.status}`);
       const data = await res.json();
       set({ parent: data, loading: false });
-      console.log("store data", data); // Log the fetched parent data
     } catch (error) {
       console.error("Error fetching parent: ", error);
       set({ loading: false }); // Stop loading even if there's an error
@@ -72,7 +71,6 @@ export const useProviderStore = create((set) => ({
       }
 
       const data = await response.json();
-      console.log("Fetched deliveries:", data);
       set({ deliveries: data, loading: false });
     } catch (error) {
       set({ loading: false });
@@ -93,7 +91,6 @@ export const useProviderStore = create((set) => ({
       }
 
       const data = await response.json();
-      console.log("Fetched labtests:", data);
       set({ labTests: data, loading: false });
     } catch (error) {
       set({ loading: false });
@@ -114,7 +111,6 @@ export const useProviderStore = create((set) => ({
       }
 
       const data = await response.json();
-      console.log("Fetched sumaries:", data);
       set({ discharge_summaries: data, loading: false });
     } catch (error) {
       set({ loading: false });
@@ -135,7 +131,6 @@ export const useProviderStore = create((set) => ({
       }
 
       const data = await response.json();
-      console.log("Fetched admissions:", data);
       set({ admissions: data, loading: false });
     } catch (error) {
       set({ loading: false });
@@ -154,7 +149,6 @@ export const useProviderStore = create((set) => ({
       }
 
       const data = await response.json();
-      console.log("Fetched rooms:", data);
       set({ rooms: data, loading: false });
     } catch (error) {
       set({ loading: false });
@@ -178,7 +172,6 @@ export const useProviderStore = create((set) => ({
       }
 
       const data = await response.json();
-      console.log("Fetched beds:", data);
       set({ beds: data, loading: false });
     } catch (error) {
       set({ loading: false });
@@ -221,7 +214,6 @@ export const useUsersStore = create((set) => ({
     payments: [],
     // present_pregnancies: [],
     // previous_pregnancies: [],
-    // resetokens: [],
     vacination_records: [],
     medicines: [],
     prescriptions: [],
@@ -275,7 +267,6 @@ export const useUsersStore = create((set) => ({
       });
 
       const results = await Promise.all(promises);
-      console.log(results);
 
       const updatedData = results.reduce((acc, result) => {
         acc[result.key] = result.data;
@@ -286,7 +277,6 @@ export const useUsersStore = create((set) => ({
         data: { ...state.data, ...updatedData },
         loading: false,
       }));
-      console.log("Fetched all data successfully");
     } catch (error) {
       set({ loading: false });
       toast.error("Error fetching data");
@@ -338,7 +328,6 @@ export const useProvidersStore = create((set) => ({
       });
 
       const results = await Promise.all(promises);
-      console.log(results);
 
       const updatedData = results.reduce((acc, result) => {
         acc[result.key] = result.data;
@@ -349,8 +338,6 @@ export const useProvidersStore = create((set) => ({
         data: { ...state.data, ...updatedData },
         loading: false,
       }));
-
-      console.log("Fetched all data successfully");
     } catch (error) {
       set({ loading: false });
       toast.error("Error fetching data");
@@ -371,11 +358,25 @@ export const useParentsStore = create((set) => ({
     discharge_summaries: [],
     admissions: [],
   },
-  providers: [],
+  // providers: [],
+  parent: [],
   loading: true,
 
   fetchProviders: async () => {
     const url = `/api/providers`;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP Error! status: ${res.status}`);
+      const data = await res.json();
+      set({ providers: data, loading: false });
+    } catch (error) {
+      console.error("Error fetching providers: ", error);
+      set({ loading: false }); // Stop loading even if there's an error
+    }
+  },
+  fetchParents: async () => {
+    const url = `/api/parents`;
 
     try {
       const res = await fetch(url);
@@ -420,7 +421,6 @@ export const useParentsStore = create((set) => ({
       });
 
       const results = await Promise.all(promises);
-      console.log(results);
 
       const updatedData = results.reduce((acc, result) => {
         acc[result.key] = result.data;
@@ -431,8 +431,6 @@ export const useParentsStore = create((set) => ({
         data: { ...state.data, ...updatedData },
         loading: false,
       }));
-
-      console.log("Fetched all data successfully");
     } catch (error) {
       set({ loading: false });
       toast.error("Error fetching data");

@@ -1,10 +1,10 @@
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  HStack,
   Input,
   Spinner,
   Text,
@@ -33,6 +33,7 @@ function Settings() {
   const { colorMode } = useColorMode();
   const [loading, setLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [passedEmail, setEmail] = useState("");
 
   const email = sessionStorage.getItem("userEmail");
   const accountType = sessionStorage.getItem("userRole");
@@ -47,6 +48,16 @@ function Settings() {
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setLoading(true);
+    setEmail(values.newEmail);
+    if (values.email === values.newEmail) {
+      toast.error("New email same as current", {
+        position: "top-right",
+        autoClose: 6000,
+      });
+      setLoading(false);
+      setSubmitting(false);
+      return;
+    }
     const { userId, accountType } = values;
     try {
       const response = await fetch(`/api/changeemail`, {
@@ -54,18 +65,16 @@ function Settings() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userId, accountType),
+        body: JSON.stringify({ userId, accountType }),
       });
 
-      console.log("Response status:", response.status); // Log response status
-
       if (response.ok) {
-        const res = await response.json();
-        console.log("Response res:", res);
-        toast.success("Personal informantion updated!", {
+        const data = await response.json();
+        toast.success(data.msg || "code sent!", {
           position: "top-right",
           autoClose: 6000,
         });
+        onOpen();
       } else {
         const errorData = await response.json();
         toast.error("An error occurred", {
@@ -85,6 +94,12 @@ function Settings() {
 
   return (
     <Box>
+      <Text>
+        Note that changing your email address will log you out of your account.
+        You&apos;ll need to use your new email for future logins. A confirmation
+        email will be sent to verify the change, so please check your new email
+        for updates and important notifications.
+      </Text>
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
@@ -93,7 +108,7 @@ function Settings() {
       >
         {({ isSubmitting }) => (
           <Form>
-            <HStack spacing={6} p="20px">
+            <Flex gap={6} p="20px" align={"center"}>
               <Field name="email">
                 {({ field, form }) => (
                   <FormControl
@@ -103,7 +118,8 @@ function Settings() {
                     <Input
                       value={field.value || ""}
                       {...field}
-                      isDisabled={true}
+                      // isDisabled={true}
+                      readOnly
                       outline={theme.colors.background[colorMode]}
                       type="email"
                     />
@@ -116,11 +132,10 @@ function Settings() {
                   <FormControl
                     isInvalid={form.errors.newEmail && form.touched.newEmail}
                   >
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>New Email</FormLabel>
                     <Input
                       value={field.value || ""}
                       {...field}
-                      isDisabled={true}
                       outline={theme.colors.background[colorMode]}
                       type="newEmail"
                     />
@@ -129,7 +144,8 @@ function Settings() {
                 )}
               </Field>
               <Button
-                w="auto"
+                w="200px"
+                marginTop={"25px"}
                 type="submit"
                 bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
                 _hover={{
@@ -137,7 +153,6 @@ function Settings() {
                 }}
                 color="#fff"
                 isLoading={isSubmitting}
-                onClick={onOpen}
                 px={"20px"}
               >
                 {loading ? <Spinner /> : <Text>Confirm</Text>}
@@ -145,9 +160,9 @@ function Settings() {
               <VerificationModal
                 onClose={onClose}
                 isOpen={isOpen}
-                email={initialValues.newEmail}
+                email={passedEmail}
               />
-            </HStack>
+            </Flex>
           </Form>
         )}
       </Formik>
