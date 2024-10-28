@@ -46,10 +46,10 @@ function EditChildModal({ data, onClose, isOpen }) {
 
   const parent_id = sessionStorage.getItem("userId");
   const initialValues = {
-    fullname: data.fullname || "",
-    certificate_No: data.certificate_No || "",
-    date_of_birth: data.date_of_birth || "",
-    gender: data.gender || "",
+    fullname: data?.fullname || "",
+    certificate_No: data?.certificate_No || "",
+    date_of_birth: data?.date_of_birth.split(" ")[0] || "",
+    gender: data?.gender || "",
     parent_id: Number(parent_id),
   };
 
@@ -219,16 +219,18 @@ function EditChildModal({ data, onClose, isOpen }) {
                           bg={theme.colors.background[colorMode]}
                           color={theme.colors.text[colorMode]}
                           htmlFor="media"
-                          className="flex items-center px-4 py-2 font-bold text-white h-[auto] rounded cursor-pointer w-[100%] border-dashed border-2"
+                          border={` 1px dashed ${theme.colors.text[colorMode]}`}
+                          borderRadius={".4rem"}
+                          cursor={"pointer"}
                         >
                           <Flex
                             flexDir={"column"}
-                            gap={2}
                             align={"center"}
                             mx={"auto"}
+                            padding={"10px"}
                           >
                             <BsFillCloudUploadFill size={"24px"} />
-                            <Text>Upload child passport pic</Text>
+                            <Text>Upload birth certificate</Text>
                             {filename && (
                               <Text mt={2}>Selected file: {filename}</Text>
                             )}
@@ -239,13 +241,42 @@ function EditChildModal({ data, onClose, isOpen }) {
                           id="media"
                           name="media"
                           type="file"
-                          accept="image/png, image/jpeg,image/jpg, pdf"
+                          accept="image/png, image/jpeg,image/jpg, application/pdf"
                           hidden
                           onChange={(event) => {
                             const file = event.currentTarget.files[0];
+                            const MAX_FILE_SIZE = 25 * 1024 * 1024;
+                            const ALLOWED_FILE_TYPES = [
+                              "image/png",
+                              "image/jpeg",
+                              "application/pdf",
+                            ]; // Allowed MIME types
+
+                            if (file.size > MAX_FILE_SIZE) {
+                              toast.error(
+                                "File size exceeds 25 MB. Please select a smaller file."
+                              );
+                              setFilename("");
+                              form.setFieldError(
+                                "media",
+                                "File size exceeds 25 MB."
+                              );
+                              return;
+                            }
+
+                            if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+                              toast.error("File type not allowed.");
+                              setFilename("");
+                              form.setFieldError(
+                                "media",
+                                "Invalid file type. Please upload an image or PDF."
+                              );
+                              return;
+                            }
+
                             const renamedFile = new File(
                               [file],
-                              `Child-passport-${Date.now()}${file.name.slice(
+                              `Certificate-${Date.now()}${file.name.slice(
                                 file.name.lastIndexOf(".")
                               )}`,
                               {
@@ -289,5 +320,5 @@ export default EditChildModal;
 EditChildModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  data: PropTypes.array,
+  data: PropTypes.object,
 };

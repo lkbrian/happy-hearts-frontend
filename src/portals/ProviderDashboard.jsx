@@ -34,10 +34,25 @@ import {
   FaUsers,
 } from "react-icons/fa6";
 import { GiHypodermicTest, GiTwoCoins } from "react-icons/gi";
+import { useProviderStore } from "../utils/store";
+import { useEffect } from "react";
 function ProviderDashboard() {
   const data = useOutletContext();
+
+  const { provider, fetchProvider } = useProviderStore((state) => ({
+    provider: state.provider,
+    fetchProvider: state.fetchProvider,
+  }));
+  const id = sessionStorage.getItem("userId");
+
+  useEffect(() => {
+    fetchProvider(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [date, setDate] = useState(new Date());
   const appointments = data.appointments.slice(-2);
+  console.log(data);
   const options = {
     weekday: "long",
     year: "numeric",
@@ -88,7 +103,7 @@ function ProviderDashboard() {
         <Box color={"#fff"} w={{ base: "100%", md: "50%" }}>
           <Text>{date.toLocaleDateString("en-US", options)}</Text>
           <Text fontSize={"22px"} fontWeight={"600"}>
-            Welcome Back, {data.name}
+            Welcome Back, {provider?.name}
           </Text>
           <Text>
             prioritize your childs health with timely and effective

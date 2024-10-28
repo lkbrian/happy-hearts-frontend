@@ -295,6 +295,7 @@ export const useProvidersStore = create((set) => ({
     deliveries: [],
     discharge_summaries: [],
     admissions: [],
+    children: [],
   },
   loading: true,
 
@@ -309,6 +310,7 @@ export const useProvidersStore = create((set) => ({
       },
       { key: "lab_tests", url: `/api/labtests/provider/${id}` },
       { key: "appointments", url: `/api/appointments/provider/${id}` },
+      { key: "children", url: `/api/children` },
       { key: "deliveries", url: `/api/deliveries/provider/${id}` },
       {
         key: "discharge_summaries",

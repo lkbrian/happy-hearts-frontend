@@ -8,10 +8,10 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ResetPassword from "./pages/ResetPassword";
 import Splash from "./pages/Splash";
-import ParentDashboard from "./parent/ParentDashboard";
-import ParentPortal from "./parent/ParentPortal";
-import ProviderDashboard from "./Provider/ProviderDashboard";
-import ProvidersPortal from "./Provider/ProvidersPortal";
+import ParentDashboard from "./portals/ParentDashboard";
+import ParentPortal from "./portals/ParentPortal";
+import ProviderDashboard from "./portals/ProviderDashboard";
+import ProvidersPortal from "./portals/ProvidersPortal";
 import Admissions from "./Tables/Admissions";
 import Births from "./Tables/Births";
 import Children from "./Tables/Children";
@@ -28,8 +28,8 @@ import Providers from "./Tables/Providers";
 import Users from "./Tables/Users";
 import VaccinationRecords from "./Tables/VaccinationRecords";
 import Vaccines from "./Tables/Vaccines";
-import UserDashboard from "./User/UserDashboard";
-import UserPortal from "./User/UserPortal";
+import UserDashboard from "./portals/UserDashboard";
+import UserPortal from "./portals/UserPortal";
 import { AuthProvider, useAuth } from "./utils/AuthContext";
 import AuthenticatedRoutes from "./utils/AuthenticatedRoutes";
 import Appointments from "./Tables/Appointments";
@@ -169,6 +169,8 @@ function App() {
               path="/providers/portal/appointment-management"
               element={<Appointments />}
             />
+            <Route path="/providers/portal/children" element={<Children />} />
+
             <Route
               path="/providers/portal/labtests-management"
               element={<LabTests />}

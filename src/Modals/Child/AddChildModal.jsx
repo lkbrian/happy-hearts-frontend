@@ -52,6 +52,13 @@ function AddChildModal({ isOpen, onClose }) {
     gender: "",
     parent_id: Number(parent_id),
   };
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Month is zero-based
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setLoading(true);
@@ -198,8 +205,9 @@ function AddChildModal({ isOpen, onClose }) {
                           <Input
                             {...field}
                             outline={theme.colors.background[colorMode]}
-                            type="datetime"
+                            type="date"
                             cursor={"text"}
+                            max={getTodayDate()}
                             css={{
                               "&::-webkit-calendar-picker-indicator": {
                                 cursor: "pointer",
@@ -240,10 +248,6 @@ function AddChildModal({ isOpen, onClose }) {
                               )}
                             </Flex>
                           </FormLabel>
-                          <small>
-                            file should be less than 25mb and of type png, jpg
-                            ,jpeg ,pdf
-                          </small>
 
                           <Input
                             id="media"
@@ -265,13 +269,23 @@ function AddChildModal({ isOpen, onClose }) {
                                   "File size exceeds 25 MB. Please select a smaller file."
                                 );
                                 setFilename("");
-                                return; // Stop the function if the file is too large
+                                form.setFieldError(
+                                  "media",
+                                  "File size exceeds 25 MB."
+                                );
+                                return;
                               }
+
                               if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-                                toast.error("file not allowed");
+                                toast.error("File type not allowed.");
                                 setFilename("");
-                                return; // Stop the function if the file is too large
+                                form.setFieldError(
+                                  "media",
+                                  "Invalid file type. Please upload an image or PDF."
+                                );
+                                return;
                               }
+
                               const renamedFile = new File(
                                 [file],
                                 `Certificate-${Date.now()}${file.name.slice(

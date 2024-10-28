@@ -20,7 +20,6 @@ function ProvidersPortal() {
 
   useEffect(() => {
     fetchAllData(id);
-    console.log("provider data", data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
