@@ -21,6 +21,7 @@ import { FaCalendarAlt, FaFileAlt, FaHistory, FaPills } from "react-icons/fa";
 import { useOutletContext } from "react-router";
 import {
   FaBabyCarriage,
+  FaBed,
   FaCapsules,
   FaChild,
   FaChildren,
@@ -29,15 +30,19 @@ import {
   FaFileMedical,
   FaFlask,
   FaHospitalUser,
+  FaHouseMedical,
   FaPrescriptionBottle,
   FaTruckMedical,
+  FaUser,
   FaUsers,
 } from "react-icons/fa6";
 import { GiHypodermicTest, GiTwoCoins } from "react-icons/gi";
 import { useProviderStore } from "../utils/store";
 import { useEffect } from "react";
+import { MdMedication } from "react-icons/md";
 function ProviderDashboard() {
   const data = useOutletContext();
+  const [isMore, setIsMore] = useState(false);
 
   const { provider, fetchProvider } = useProviderStore((state) => ({
     provider: state.provider,
@@ -63,7 +68,8 @@ function ProviderDashboard() {
   const { colorMode } = useColorMode();
 
   const icons = {
-    providers: FaUsers,
+    providers: FaUsers, // Example: replace with the actual icon you want for providers
+    users: FaUser,
     vaccines: GiHypodermicTest,
     discharge_medications: FaPills,
     parents_medical_info: FaFileMedical,
@@ -72,6 +78,7 @@ function ProviderDashboard() {
     previous_pregnancies: FaHistory,
     vacination_records: FaClipboardCheck,
     medicines: FaCapsules,
+    medications: MdMedication,
     prescriptions: FaPrescriptionBottle,
     parents: FaChild,
     documents: FaFileAlt,
@@ -81,7 +88,9 @@ function ProviderDashboard() {
     appointments: FaCalendarAlt,
     deliveries: FaTruckMedical,
     discharge_summaries: FaClipboardList,
+    rooms: FaHouseMedical,
     admissions: FaHospitalUser,
+    beds: FaBed,
   };
 
   return (
@@ -154,29 +163,42 @@ function ProviderDashboard() {
             justifyContent={{ base: "center", xl: "start" }}
             m="auto"
           >
-            {Object.keys(data).map((key) => (
-              <Stat
-                key={key}
-                borderRadius="md"
-                boxShadow="lg"
-                minW="250px"
-                maxW="350px"
-                h="150px"
-                p={4}
-                textAlign="center"
-                bg="linear-gradient(to bottom right, rgba(33,121,243,1) 45%, rgba(65,202,227,1) 100%)"
-                color="#fff"
-              >
-                <StatNumber fontSize="40px">
-                  {data[key]?.length ?? 0}
-                </StatNumber>
-                <StatLabel textTransform="capitalize">
-                  {key.replace(/_/g, " ")}
-                </StatLabel>
-                <Icon as={icons[key]} boxSize={8} mb={2} />
-              </Stat>
-            ))}
+            {(isMore ? Object.keys(data) : Object.keys(data).slice(0, 8)).map(
+              (key) => (
+                <Stat
+                  key={key}
+                  borderRadius="md"
+                  boxShadow="lg"
+                  minW="250px"
+                  maxW="350px"
+                  h="150px"
+                  p={4}
+                  textAlign="center"
+                  bg="linear-gradient(to bottom right, rgba(33,121,243,1) 45%, rgba(65,202,227,1) 100%)"
+                  color="#fff"
+                >
+                  <StatNumber fontSize="40px">
+                    {data[key]?.length ?? 0}
+                  </StatNumber>
+                  <StatLabel textTransform="capitalize">
+                    {key.replace(/_/g, " ")}
+                  </StatLabel>
+                  <Icon as={icons[key]} boxSize={8} mb={2} />
+                </Stat>
+              )
+            )}
           </Flex>
+          <Text
+            bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
+            bgClip="text"
+            cursor={"pointer"}
+            onClick={() => setIsMore(!isMore)}
+            p={4}
+            align={"bottom"}
+            w={"100%"}
+          >
+            {isMore ? "See less" : "See more"}
+          </Text>
         </GridItem>
 
         <GridItem colSpan={{ base: 12, sm: 12, md: 4, lg: 3 }}>

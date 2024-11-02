@@ -26,7 +26,7 @@ function Providers() {
   const theme = useTheme();
   const { colorMode } = useColorMode();
   const contextData = useOutletContext();
-  const data = contextData.data.providers;
+  const data = contextData.providers;
   const {
     isOpen: isAddModal,
     onOpen: onAddModalOpen,

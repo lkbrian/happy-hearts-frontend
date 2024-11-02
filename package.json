@@ -20,6 +20,8 @@
     "@smastrom/react-rating": "^1.5.0",
     "axios": "^1.7.7",
     "formik": "^2.4.6",
+    "formik-devtools": "^0.1.0",
+    "formik-devtools-extension": "^0.1.8",
     "framer-motion": "^11.3.21",
     "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",

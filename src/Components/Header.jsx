@@ -43,7 +43,7 @@ function Header() {
         zIndex={1000}
         backdropBlur={"8px"}
       >
-        <Flex gap={"20px"} align={"center"}>
+        <Flex gap={"28px"} align={"center"}>
           <HamburgerIcon
             onClick={toggleDrawer}
             fontSize={"28px"}
@@ -72,7 +72,7 @@ function Header() {
         <Flex gap={"30px"} align={"center"}>
           <Flex
             align={"center"}
-            gap={"15px"}
+            gap={"5px"}
             onClick={toggleColorMode}
             cursor={"pointer"}
           >
@@ -92,8 +92,8 @@ function Header() {
                 color={theme.colors.icon[colorMode]}
               />
             )}
-            <FaEnvelope color={theme.colors.text[colorMode]} size={"22px"} />
           </Flex>
+          <FaEnvelope color={theme.colors.text[colorMode]} size={"22px"} />
           <Avatar
             // icon={<AiOutlineUser fontSize="1.5rem" />}
             size="md"

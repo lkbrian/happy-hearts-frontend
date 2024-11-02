@@ -27,6 +27,7 @@ function Medicines() {
   const { colorMode } = useColorMode();
   const contextData = useOutletContext();
   const data = contextData.medicines;
+  console.log(contextData);
   const {
     isOpen: isAddModal,
     onOpen: onAddModalOpen,

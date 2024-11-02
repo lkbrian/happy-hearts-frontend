@@ -29,7 +29,7 @@ import * as Yup from "yup";
 import { useProviderStore } from "../../utils/store";
 import axiosInstance from "../../utils/axiosInstance";
 
-function EditAdmission({ isOpen, onClose, data }) {
+function EditPreviousPregnancy({ isOpen, onClose, data }) {
   const theme = useTheme();
   const { colorMode } = useColorMode();
   const [loading, setLoading] = useState(false);
@@ -115,7 +115,7 @@ function EditAdmission({ isOpen, onClose, data }) {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.patch("/admissions", values);
+      const response = await axiosInstance.post("/admissions", values);
 
       // Handle the response
       toast.success(response.data.msg || "Admission created successfully!", {
@@ -427,10 +427,10 @@ function EditAdmission({ isOpen, onClose, data }) {
   );
 }
 
-EditAdmission.propTypes = {
+EditPreviousPregnancy.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   data: PropTypes.object,
 };
 
-export default EditAdmission;
+export default EditPreviousPregnancy;

@@ -30,6 +30,7 @@ import {
   FaFileMedical,
   FaFlask,
   FaHospitalUser,
+  FaHouseMedical,
   FaTruckMedical,
   FaUser,
   FaUsers,
@@ -40,6 +41,7 @@ import { useOutletContext } from "react-router";
 import AdmissionsChart from "../Charts/AdmissionsChart";
 import DonutChart from "../Charts/DonutChart";
 import Users from "../Tables/Users";
+import { MdMedication } from "react-icons/md";
 
 function UserDashboard() {
   const theme = useTheme();
@@ -59,6 +61,7 @@ function UserDashboard() {
     previous_pregnancies: FaHistory,
     vacination_records: FaClipboardCheck,
     medicines: FaCapsules,
+    medications: MdMedication,
     prescriptions: FaPrescriptionBottle,
     parents: FaChild,
     documents: FaFileAlt,
@@ -68,7 +71,7 @@ function UserDashboard() {
     appointments: FaCalendarAlt,
     deliveries: FaTruckMedical,
     discharge_summaries: FaClipboardList,
-    rooms: FaBed,
+    rooms: FaHouseMedical,
     admissions: FaHospitalUser,
     beds: FaBed,
   };

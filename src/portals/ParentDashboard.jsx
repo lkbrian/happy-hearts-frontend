@@ -17,24 +17,36 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
-import { FaCalendarAlt, FaFileAlt, FaPills } from "react-icons/fa";
+import { FaCalendarAlt, FaFileAlt, FaHistory, FaPills } from "react-icons/fa";
 import { useOutletContext } from "react-router";
 
 import {
+  FaBabyCarriage,
+  FaBed,
+  FaCapsules,
+  FaChild,
   FaChildren,
   FaClipboardCheck,
   FaClipboardList,
+  FaFileMedical,
   FaFlask,
   FaHospitalUser,
+  FaHouseMedical,
   FaPrescriptionBottle,
   FaTruckMedical,
+  FaUser,
+  FaUsers,
 } from "react-icons/fa6";
 import { GiHypodermicTest, GiTwoCoins } from "react-icons/gi";
 import { useParentStore } from "../utils/store";
+import { MdMedication } from "react-icons/md";
 // import MedicationsTable from "./MedicationsTable";
 // import ChildrensTable from "./ChildrensTable";
 function ParentDashboard() {
   const data = useOutletContext();
+  console.log(data);
+  const [isMore, setIsMore] = useState(false);
+
   const appointments = data.appointments;
   const [date, setDate] = useState(new Date());
   const options = {
@@ -47,22 +59,29 @@ function ParentDashboard() {
   const theme = useTheme();
   const { colorMode } = useColorMode();
   const icons = {
+    providers: FaUsers, // Example: replace with the actual icon you want for providers
+    users: FaUser,
     vaccines: GiHypodermicTest,
     discharge_medications: FaPills,
+    parents_medical_info: FaFileMedical,
     payments: GiTwoCoins,
-    // present_pregnancies: FaBabyCarriage,
-    // previous_pregnancies: FaHistory,
+    present_pregnancies: FaBabyCarriage,
+    previous_pregnancies: FaHistory,
     vacination_records: FaClipboardCheck,
-    // medicines: FaCapsules,
-    parents_prescriptions: FaPrescriptionBottle,
-    // parents: FaChild,
+    medicines: FaCapsules,
+    medications: MdMedication,
+    prescriptions: FaPrescriptionBottle,
+    parents: FaChild,
     documents: FaFileAlt,
     children: FaChildren,
+    FaChildren,
     lab_tests: FaFlask,
     appointments: FaCalendarAlt,
     deliveries: FaTruckMedical,
     discharge_summaries: FaClipboardList,
+    rooms: FaHouseMedical,
     admissions: FaHospitalUser,
+    beds: FaBed,
   };
   const { parent, fetchParent } = useParentStore((state) => ({
     parent: state.parent,
@@ -144,9 +163,8 @@ function ParentDashboard() {
             flexWrap="wrap"
             justifyContent={{ base: "center", xl: "start" }}
           >
-            {Object.keys(data)
-              .slice(0, 10)
-              .map((key) => (
+            {(isMore ? Object.keys(data) : Object.keys(data).slice(0, 10)).map(
+              (key) => (
                 <Stat
                   key={key}
                   borderRadius="md"
@@ -167,8 +185,18 @@ function ParentDashboard() {
                   </StatLabel>
                   <Icon as={icons[key]} boxSize={8} mb={2} />
                 </Stat>
-              ))}
-          </Flex>
+              )
+            )}
+          </Flex>{" "}
+          <Text
+            bgGradient="linear(to bottom right, rgba(33,121,243,1) 25%, rgba(65,202,227,1) 100%)"
+            bgClip="text"
+            cursor={"pointer"}
+            onClick={() => setIsMore(!isMore)}
+            p={4}
+          >
+            {isMore ? "See less" : "See more"}
+          </Text>
         </GridItem>
         <GridItem colSpan={{ base: 12, sm: 12, md: 4, lg: 3 }}>
           <Box

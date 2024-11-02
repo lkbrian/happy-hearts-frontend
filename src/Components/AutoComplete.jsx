@@ -1,85 +1,78 @@
-import React, { useState } from "react";
-import {
-  Input,
-  List,
-  ListItem,
-  ListIcon,
-  Box,
-  useDisclosure,
-  useOutsideClick,
-} from "@chakra-ui/react";
-import { CheckCircleIcon } from "@chakra-ui/icons";
-import { PropTypes } from "prop-types";
+import { useState } from "react";
+import { Box, Input, List, ListItem, VStack } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
-const AutoComplete = ({ options }) => {
-  const [inputValue, setInputValue] = useState("");
-  const [filteredOptions, setFilteredOptions] = useState([]);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const ref = React.useRef();
-
-  // Close dropdown when clicking outside
-  useOutsideClick({
-    ref: ref,
-    handler: () => onClose(),
-  });
+const Autocomplete = ({ options, isObjectArray }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredOptions, setFilteredOptions] = useState(options);
+  const [selectedValues, setSelectedValues] = useState([]);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
-    setInputValue(value);
-    if (value) {
-      const filtered = options.filter((option) =>
-        option.name.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredOptions(filtered);
-      onOpen();
-    } else {
-      setFilteredOptions([]);
-      onClose();
-    }
+    setSearchTerm(value);
+    setFilteredOptions(
+      options.filter((option) => {
+        const displayValue = isObjectArray ? "object" : option;
+        return displayValue.toLowerCase().includes(value.toLowerCase());
+      })
+    );
   };
 
   const handleOptionClick = (option) => {
-    setInputValue(option.name);
-    setFilteredOptions([]);
-    onClose();
+    setSelectedValues((prev) => [...prev, option]);
+    setSearchTerm(""); // Clear input after selection
+    setFilteredOptions(options); // Reset options
   };
 
   return (
-    <Box ref={ref} position="relative">
+    <VStack align="start" width="100%">
       <Input
-        placeholder="Type to search..."
-        value={inputValue}
+        placeholder="Type to filter options..."
+        value={searchTerm}
         onChange={handleInputChange}
       />
-      {isOpen && filteredOptions.length > 0 && (
-        <List
-          borderWidth="1px"
+      {searchTerm && filteredOptions.length > 0 && (
+        <Box
+          border="1px solid"
+          borderColor="gray.300"
           borderRadius="md"
-          maxHeight="200px"
-          overflowY="auto"
-          bg="white"
-          zIndex={1000}
-          position="absolute"
+          mt={1}
           width="100%"
+          maxHeight="150px"
+          overflowY="auto"
         >
-          {filteredOptions.map((option) => (
-            <ListItem
-              key={option.id}
-              onClick={() => handleOptionClick(option)}
-              padding="8px"
-              _hover={{ bg: "gray.200", cursor: "pointer" }}
-            >
-              <ListIcon as={CheckCircleIcon} color="green.500" />
-              {option.name}
-            </ListItem>
-          ))}
-        </List>
+          <List spacing={1}>
+            {filteredOptions.map((option, index) => {
+              const displayValue = isObjectArray ? option.label : option;
+              return (
+                <ListItem
+                  key={index}
+                  p={2}
+                  cursor="pointer"
+                  _hover={{ backgroundColor: "gray.100" }}
+                  onClick={() => handleOptionClick(option)}
+                >
+                  {displayValue}
+                </ListItem>
+              );
+            })}
+          </List>
+        </Box>
       )}
-    </Box>
+      {/* Display selected values */}
+      <Box mt={2} width="100%">
+        <strong>Selected Values:</strong>
+        <pre>{JSON.stringify(selectedValues, null, 2)}</pre>
+      </Box>
+    </VStack>
   );
 };
 
-export default AutoComplete;
-AutoComplete.propTypes = {
-  options: PropTypes.object,
+Autocomplete.propTypes = {
+  options: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.array, PropTypes.object])
+  ).isRequired,
+  isObjectArray: PropTypes.bool.isRequired, // New flag to differentiate data type
 };
+
+export default Autocomplete;

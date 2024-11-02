@@ -40,6 +40,11 @@ const adminRoutes = [
     icon: MdOutlineChildCare,
   },
   {
+    path: "/users/portal/birth-management",
+    name: "Births",
+    icon: MdOutlineChildCare,
+  },
+  {
     path: "/users/portal/deliveries-management",
     name: "Deliveries",
     icon: FaTruckMedical,
@@ -69,6 +74,11 @@ const adminRoutes = [
     path: "/users/portal/medications-management",
     name: "Medications",
     icon: FaFileMedical,
+  },
+  {
+    path: "/users/portal/prescriptions-management",
+    name: "Prescriptions",
+    icon: FaPrescriptionBottle,
   },
   {
     path: "/users/portal/medical-info",
@@ -125,6 +135,11 @@ const providerRoutes = [
     icon: MdOutlineChildCare,
   },
   {
+    path: "/providers/portal/birth-management",
+    name: "Births",
+    icon: MdOutlineChildCare,
+  },
+  {
     path: "/providers/portal/deliveries-management",
     name: "Deliveries",
     icon: FaTruckMedical,
@@ -148,6 +163,11 @@ const providerRoutes = [
     path: "/providers/portal/medications-management",
     name: "Medications",
     icon: FaFileMedical,
+  },
+  {
+    path: "/users/portal/prescriptions-management",
+    name: "Prescriptions",
+    icon: FaPrescriptionBottle,
   },
   {
     path: "/providers/portal/medical-info",
@@ -192,6 +212,11 @@ const routesConfig = {
     {
       path: "/parents/portal/children",
       name: "Children",
+      icon: MdOutlineChildCare,
+    },
+    {
+      path: "/parents/portal/births",
+      name: "Births",
       icon: MdOutlineChildCare,
     },
     {

@@ -26,7 +26,7 @@ function Rooms() {
   const theme = useTheme();
   const { colorMode } = useColorMode();
   const contextData = useOutletContext();
-  const data = contextData.data.rooms;
+  const data = contextData.rooms;
   const {
     isOpen: isAddModal,
     onOpen: onAddModalOpen,

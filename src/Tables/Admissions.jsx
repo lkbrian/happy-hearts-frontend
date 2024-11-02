@@ -21,8 +21,9 @@ import { useEffect, useState } from "react";
 import Pagination from "../Components/Pagination";
 import AddAdmission from "../Modals/Admissions/AddAdmission";
 import EditAdmission from "../Modals/Admissions/EditAdmission";
-import { useProviderStore } from "../utils/store";
+// import { useProviderStore } from "../utils/store";
 import ViewAdmission from "../Modals/Admissions/ViewAdmission";
+import { useOutletContext } from "react-router";
 
 function Admissions() {
   const theme = useTheme();
@@ -30,17 +31,8 @@ function Admissions() {
   const { colorMode } = useColorMode();
   const [elementData, setElementData] = useState(null);
 
-  const { admissions, fetchAdmissions } = useProviderStore((state) => ({
-    admissions: state.admissions,
-    fetchAdmissions: state.fetchAdmissions,
-  }));
-
-  useEffect(() => {
-    if (!admissions || admissions.length === 0) {
-      fetchAdmissions();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const data = useOutletContext();
+  const admissions = data?.admissions;
 
   const {
     isOpen: isAddModal,

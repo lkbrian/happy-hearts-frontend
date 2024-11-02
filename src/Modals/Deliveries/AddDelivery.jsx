@@ -17,21 +17,23 @@ import {
   RadioGroup,
   HStack,
   Radio,
+  Textarea,
 } from "@chakra-ui/react";
 import { PropTypes } from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Form, Formik, Field } from "formik";
+import { usePregnanciesStore } from "../../utils/store";
 
 function AddDelivery({ onClose, isOpen }) {
   const theme = useTheme();
   const { colorMode } = useColorMode();
 
-  const [loading, setLoading] = useState(false);
-
+  const [loadState, setLoading] = useState(false);
   const validationSchema = Yup.object({
-    national_id: Yup.string().required("national id is required"),
+    // national_id: Yup.string().required("national id is required"),
+    pregnancy_id: Yup.string().required("pregnancy id is required"),
     mode_of_delivery: Yup.string().required("Mode of delivery is required"),
     date: Yup.date()
       .required("Date is required")
@@ -45,21 +47,39 @@ function AddDelivery({ onClose, isOpen }) {
     gender: Yup.string()
       .oneOf(["Male", "Female"], "Invalid gender")
       .required("Gender is required"),
+    fate: Yup.string()
+      .oneOf(["Dead", "Alive"], "Invalid fate")
+      .required("fate is required"),
+    typeOfBirth: Yup.string().required("type of birth is required"),
+    remarks: Yup.string(),
   });
 
   const provider_id = sessionStorage.getItem("userId");
   const initialValues = {
     mode_of_delivery: "",
-    national_id: "",
+    // national_id: "",
     date: "",
     duration_of_labour: "",
     condition_of_mother: "",
     condition_of_baby: "",
     weight_at_birth: "",
     gender: "",
+    fate: "",
+    typeOfBirth: "",
     provider_id: Number(provider_id),
+    pregnancy_id: "",
+    remarks: "",
   };
+  const { pregnancies, fetchPregnancies } = usePregnanciesStore((state) => ({
+    pregnancies: state.pregnancies,
+    fetchPregnancies: state.fetchPregnancies,
+  }));
 
+  useEffect(() => {
+    fetchPregnancies();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  console.log(pregnancies);
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setLoading(true);
     try {
@@ -73,14 +93,15 @@ function AddDelivery({ onClose, isOpen }) {
 
       if (response.ok) {
         const res = await response.json();
-        toast.success(res.msg || "Appointment created successfully!", {
+        toast.success(res.msg || "Delivery created successfully!", {
           position: "top-right",
           autoClose: 6000,
         });
         onClose();
+        resetForm();
       } else {
         const errorData = await response.json();
-        toast.error(errorData.msg || "Error creating appointment", {
+        toast.error(errorData.msg || "Error creating Delivery", {
           position: "top-right",
           autoClose: 6000,
         });
@@ -91,7 +112,6 @@ function AddDelivery({ onClose, isOpen }) {
     } finally {
       setSubmitting(false);
       setLoading(false);
-      resetForm();
     }
   };
 
@@ -117,7 +137,7 @@ function AddDelivery({ onClose, isOpen }) {
             {({ isSubmitting }) => (
               <Form>
                 <Stack spacing={6} p="10px">
-                  <Field name="national_id">
+                  {/* <Field name="national_id">
                     {({ field, form }) => (
                       <FormControl
                         isInvalid={
@@ -135,7 +155,68 @@ function AddDelivery({ onClose, isOpen }) {
                         </FormErrorMessage>
                       </FormControl>
                     )}
-                  </Field>
+                  </Field> */}
+                  <HStack>
+                    <Field name="pregnancy_id">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={
+                            form.errors.pregnancy_id &&
+                            form.touched.pregnancy_id
+                          }
+                        >
+                          <FormLabel>Pregnacy</FormLabel>
+                          <Select
+                            outline={theme.colors.background[colorMode]}
+                            {...field}
+                            placeholder="Select a pregnancy"
+                          >
+                            {pregnancies.map((p) => (
+                              <option key={p.pp_id} value={p.pp_id}>
+                                Pregnancy {p.pp_id} | {p.parent.national_id}
+                              </option>
+                            ))}
+                          </Select>
+                          <FormErrorMessage>
+                            {form.errors.pregnancy_id}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="typeOfBirth">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={
+                            form.errors.typeOfBirth && form.touched.typeOfBirth
+                          }
+                        >
+                          <FormLabel>Type of Birth</FormLabel>
+                          <Select
+                            outline={theme.colors.background[colorMode]}
+                            {...field}
+                            placeholder="Select type of birth"
+                          >
+                            <option value={"Single"}>Single(1)</option>
+                            <option value={"Twins"}>Twins(2)</option>
+                            <option value={"Triplets"}>Triplets(3)</option>
+                            <option value={"Quadruplets"}>
+                              Quadruplets(4)
+                            </option>
+                            <option value={"Quintuplets"}>
+                              Quintuplets(5)
+                            </option>
+                            <option value={"Sextuplets"}>Sextuplets(6)</option>
+                            <option value={"Septuplets"}>Sextuplets(7)</option>
+                            <option value={"Octuplets"}>Octuplets(8)</option>
+                            <option value={"Nonuplets"}>Nonuplets(9)</option>
+                          </Select>
+                          <FormErrorMessage>
+                            {form.errors.typeOfBirth}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                  </HStack>
                   <HStack spacing={4}>
                     {/* Mode of Delivery */}
                     <Field name="mode_of_delivery">
@@ -161,7 +242,6 @@ function AddDelivery({ onClose, isOpen }) {
                         </FormControl>
                       )}
                     </Field>
-
                     {/* Date */}
                     <Field name="date">
                       {({ field, form }) => (
@@ -253,25 +333,67 @@ function AddDelivery({ onClose, isOpen }) {
                     </Field>
                   </HStack>
                   {/* Gender */}
-                  <Field name="gender">
+                  <HStack>
+                    <Field name="gender">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={form.errors.gender && form.touched.gender}
+                        >
+                          <FormLabel>Gender</FormLabel>
+                          <RadioGroup
+                            {...field}
+                            onChange={(value) =>
+                              form.setFieldValue("gender", value)
+                            }
+                          >
+                            <HStack spacing={4}>
+                              <Radio value="Male">Male</Radio>
+                              <Radio value="Female">Female</Radio>
+                            </HStack>
+                          </RadioGroup>
+                          <FormErrorMessage>
+                            {form.errors.gender}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="fate">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={form.errors.fate && form.touched.fate}
+                        >
+                          <FormLabel>Fate</FormLabel>
+                          <RadioGroup
+                            {...field}
+                            onChange={(value) =>
+                              form.setFieldValue("fate", value)
+                            }
+                          >
+                            <HStack spacing={4}>
+                              <Radio value="Alive">Alive</Radio>
+                              <Radio value="Dead">Dead</Radio>
+                            </HStack>
+                          </RadioGroup>
+                          <FormErrorMessage>
+                            {form.errors.fate}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                  </HStack>
+                  <Field name="remarks">
                     {({ field, form }) => (
                       <FormControl
-                        isInvalid={form.errors.gender && form.touched.gender}
+                        isInvalid={form.errors.remarks && form.touched.remarks}
                       >
-                        <FormLabel>Gender</FormLabel>
-                        <RadioGroup
+                        <FormLabel>Child Weight at Birth</FormLabel>
+                        <Textarea
                           {...field}
-                          onChange={(value) =>
-                            form.setFieldValue("gender", value)
-                          }
-                        >
-                          <HStack spacing={4}>
-                            <Radio value="Male">Male</Radio>
-                            <Radio value="Female">Female</Radio>
-                          </HStack>
-                        </RadioGroup>
+                          type="text"
+                          outline={theme.colors.background[colorMode]}
+                        />
                         <FormErrorMessage>
-                          {form.errors.gender}
+                          {form.errors.remarks}
                         </FormErrorMessage>
                       </FormControl>
                     )}
@@ -286,7 +408,7 @@ function AddDelivery({ onClose, isOpen }) {
                     }}
                     color="#fff"
                     my="8px"
-                    isLoading={isSubmitting || loading}
+                    isLoading={isSubmitting || loadState}
                   >
                     Submit
                   </Button>

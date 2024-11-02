@@ -28,7 +28,7 @@ function Vaccines() {
   const theme = useTheme();
   const { colorMode } = useColorMode();
   const contextData = useOutletContext();
-  const data = contextData.data.vaccines;
+  const data = contextData.vaccines;
   const {
     isOpen: isAddModal,
     onOpen: onAddModalOpen,

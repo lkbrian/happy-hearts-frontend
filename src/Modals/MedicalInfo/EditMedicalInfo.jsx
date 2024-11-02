@@ -29,7 +29,7 @@ import * as Yup from "yup";
 import { useProviderStore } from "../../utils/store";
 import axiosInstance from "../../utils/axiosInstance";
 
-function EditAdmission({ isOpen, onClose, data }) {
+function EditMedicalInfo({ isOpen, onClose, data }) {
   const theme = useTheme();
   const { colorMode } = useColorMode();
   const [loading, setLoading] = useState(false);
@@ -86,13 +86,21 @@ function EditAdmission({ isOpen, onClose, data }) {
   const child_certificate_No = data?.child?.certificate_No ?? "";
   const provider_id = sessionStorage.getItem("userId");
   const initialValues = {
-    admission_for: admissionBelongsTo,
-    national_id: parent_national_id,
-    certificate_No: child_certificate_No,
-    reason_for_admission: data?.reason_for_admission,
-    admission_date: data?.admission_date,
-    room_id: data?.room_id,
-    bed_id: data?.bed_id,
+    blood_transfusion: data?.blood_transfusion,
+    diabetes: data?.diabetes,
+    family_history: data?.family_history,
+    history_id: data?.history_id,
+    hypertension: data?.hypertension,
+    parent_id: data?.parent_id,
+    tuberclosis: data?.tuberclosis,
+    twins: data?.twins,
+    // admission_for: admissionBelongsTo,
+    // national_id: parent_national_id,
+    // certificate_No: child_certificate_No,
+    // reason_for_admission: data?.reason_for_admission,
+    // admission_date: data?.admission_date,
+    // room_id: data?.room_id,
+    // bed_id: data?.bed_id,
     provider_id: Number(provider_id),
   };
   const { beds, rooms, fetchRooms, fetchBeds, resetStore } = useProviderStore(
@@ -115,7 +123,7 @@ function EditAdmission({ isOpen, onClose, data }) {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.patch("/admissions", values);
+      const response = await axiosInstance.post("/admissions", values);
 
       // Handle the response
       toast.success(response.data.msg || "Admission created successfully!", {
@@ -427,10 +435,10 @@ function EditAdmission({ isOpen, onClose, data }) {
   );
 }
 
-EditAdmission.propTypes = {
+EditMedicalInfo.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   data: PropTypes.object,
 };
 
-export default EditAdmission;
+export default EditMedicalInfo;

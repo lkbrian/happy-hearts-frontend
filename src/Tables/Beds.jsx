@@ -26,7 +26,7 @@ function Beds() {
   const theme = useTheme();
   const { colorMode } = useColorMode();
   const contextData = useOutletContext();
-  const data = contextData.data.beds;
+  const data = contextData.beds;
   const {
     isOpen: isAddModal,
     onOpen: onAddModalOpen,

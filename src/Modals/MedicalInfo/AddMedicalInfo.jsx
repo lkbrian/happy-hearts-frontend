@@ -29,7 +29,7 @@ import * as Yup from "yup";
 import { useProviderStore } from "../../utils/store";
 import axiosInstance from "../../utils/axiosInstance";
 
-function EditAdmission({ isOpen, onClose, data }) {
+function AddMedicalInfo({ isOpen, onClose }) {
   const theme = useTheme();
   const { colorMode } = useColorMode();
   const [loading, setLoading] = useState(false);
@@ -68,31 +68,16 @@ function EditAdmission({ isOpen, onClose, data }) {
     room_id: Yup.number().required("Room ID is required"),
     bed_id: Yup.number().required("Bed ID is required"),
   });
-  // admission_date: "2024-10-20 23:12:00";
-  // admission_id: 1;
-  // bed_id: 3;
-  // child_id: 1;
-  // general_assessment: null;
-  // initial_treatment_plan: null;
-  // insurance_details: null;
-  // parent_id: 1;
-  // provider: {
-  //   name: "Dr. Sarah Connor";
-  // }
-  // reason_for_admission: "labtests follow up";
-  // room_id: 2;
-  const admissionBelongsTo = data?.child_id === null ? "Parent" : "Child";
-  const parent_national_id = data?.parent?.national_id ?? "";
-  const child_certificate_No = data?.child?.certificate_No ?? "";
+
   const provider_id = sessionStorage.getItem("userId");
   const initialValues = {
-    admission_for: admissionBelongsTo,
-    national_id: parent_national_id,
-    certificate_No: child_certificate_No,
-    reason_for_admission: data?.reason_for_admission,
-    admission_date: data?.admission_date,
-    room_id: data?.room_id,
-    bed_id: data?.bed_id,
+    admission_for: "",
+    national_id: "",
+    certificate_No: "",
+    reason_for_admission: "",
+    admission_date: "",
+    room_id: "",
+    bed_id: "",
     provider_id: Number(provider_id),
   };
   const { beds, rooms, fetchRooms, fetchBeds, resetStore } = useProviderStore(
@@ -115,7 +100,7 @@ function EditAdmission({ isOpen, onClose, data }) {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.patch("/admissions", values);
+      const response = await axiosInstance.post("/admissions", values);
 
       // Handle the response
       toast.success(response.data.msg || "Admission created successfully!", {
@@ -152,7 +137,7 @@ function EditAdmission({ isOpen, onClose, data }) {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Update Admission</ModalHeader>
+          <ModalHeader>Add Admission</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Formik
@@ -178,15 +163,10 @@ function EditAdmission({ isOpen, onClose, data }) {
                             onChange={(value) =>
                               form.setFieldValue("admission_for", value)
                             }
-                            readOnly
                           >
                             <HStack spacing={4}>
-                              <Radio readOnly value="Parent">
-                                Parent
-                              </Radio>
-                              <Radio readOnly value="Child">
-                                Child
-                              </Radio>
+                              <Radio value="Parent">Parent</Radio>
+                              <Radio value="Child">Child</Radio>
                             </HStack>
                           </RadioGroup>
                           <FormErrorMessage>
@@ -206,7 +186,6 @@ function EditAdmission({ isOpen, onClose, data }) {
                           >
                             <FormLabel>Parent National ID</FormLabel>
                             <Input
-                              readOnly
                               {...field}
                               outline={theme.colors.background[colorMode]}
                               type="text"
@@ -231,7 +210,6 @@ function EditAdmission({ isOpen, onClose, data }) {
                               <FormLabel>Parent National ID</FormLabel>
                               <Input
                                 {...field}
-                                readOnly
                                 outline={theme.colors.background[colorMode]}
                                 type="text"
                               />
@@ -253,7 +231,6 @@ function EditAdmission({ isOpen, onClose, data }) {
                               <FormLabel>Certificate Number</FormLabel>
                               <Input
                                 {...field}
-                                readOnly
                                 outline={theme.colors.background[colorMode]}
                                 type="text"
                               />
@@ -415,7 +392,7 @@ function EditAdmission({ isOpen, onClose, data }) {
                     my="8px"
                     isLoading={isSubmitting || loading}
                   >
-                    {loading ? <Spinner /> : <Text>Update Admission</Text>}
+                    {loading ? <Spinner /> : <Text>Add Admission</Text>}
                   </Button>
                 </Form>
               )}
@@ -427,10 +404,9 @@ function EditAdmission({ isOpen, onClose, data }) {
   );
 }
 
-EditAdmission.propTypes = {
+AddMedicalInfo.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  data: PropTypes.object,
 };
 
-export default EditAdmission;
+export default AddMedicalInfo;

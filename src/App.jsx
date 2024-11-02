@@ -33,6 +33,7 @@ import UserPortal from "./portals/UserPortal";
 import { AuthProvider, useAuth } from "./utils/AuthContext";
 import AuthenticatedRoutes from "./utils/AuthenticatedRoutes";
 import Appointments from "./Tables/Appointments";
+import Prescriptions from "./Tables/Prescriptions";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -73,7 +74,7 @@ function App() {
             />
             <Route
               path="/parents/portal/prescriptions"
-              element={<Medicines />}
+              element={<Prescriptions />}
             />
             <Route
               path="/parents/portal/present-pregnancy"
@@ -99,6 +100,11 @@ function App() {
             <Route
               path="/users/portal/appointment-management"
               element={<Appointments />}
+            />
+            <Route path="/users/portal/birth-management" element={<Births />} />
+            <Route
+              path="/users/portal/prescriptions-management"
+              element={<Prescriptions />}
             />
             <Route
               path="/users/portal/medicine-management"
@@ -170,7 +176,14 @@ function App() {
               element={<Appointments />}
             />
             <Route path="/providers/portal/children" element={<Children />} />
-
+            <Route
+              path="/providers/portal/birth-management"
+              element={<Births />}
+            />
+            <Route
+              path="/providers/portal/prescriptions-management"
+              element={<Prescriptions />}
+            />
             <Route
               path="/providers/portal/labtests-management"
               element={<LabTests />}

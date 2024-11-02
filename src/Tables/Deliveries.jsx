@@ -21,13 +21,13 @@ import { useEffect, useState } from "react";
 import Pagination from "../Components/Pagination";
 import AddDelivery from "../Modals/Deliveries/AddDelivery";
 import EditDelivery from "../Modals/Deliveries/EditDelivery";
-import { useProviderStore } from "../utils/store";
+import { usePregnanciesStore } from "../utils/store";
+import { useOutletContext } from "react-router";
 
 function Deliveries() {
   const theme = useTheme();
   const { colorMode } = useColorMode();
   const [elementData, setElementData] = useState(null);
-  // const [deliveries, setDeliveries] = useState(null);
   const {
     isOpen: isAddModal,
     onOpen: onAddModalOpen,
@@ -38,49 +38,27 @@ function Deliveries() {
     onOpen: onEditModalOpen,
     onClose: onEditModalClose,
   } = useDisclosure();
-  const { deliveries, fetchDeliveries } = useProviderStore((state) => ({
-    deliveries: state.deliveries,
-    fetchDeliveries: state.fetchDeliveries,
-  }));
 
-  const id = sessionStorage.getItem("userId");
+  const data = useOutletContext();
+  const deliveries = data?.deliveries;
 
-  useEffect(() => {
-    if (!deliveries || deliveries.length === 0) {
-      fetchDeliveries(id);
-    }
-  }, [fetchDeliveries, deliveries, id]);
-  // condition_of_baby: "Healthy";
-  // condition_of_mother: "Stable";
-  // date: "2024-09-25 14:30:00";
-  // delivery_id: 1;
-  // duration_of_labour: "6 hours";
-  // gender: "Female";
-  // mode_of_delivery: "Caesarean";
-  // useEffect(() => {
-  //   const id = sessionStorage.getItem("userId");
-  //   const role = sessionStorage.getItem("userRole");
-  //   const providerUrl = `/api/appointments/provider/${id}`;
-  //   const url = `/api/appointments`;
-  //   const fetchDeliveries = async () => {
-  //     const response = await fetch(role === "provider" ? providerUrl : url);
-  //     if (!response.ok)
-  //       throw new Error(`HTTP Error! status: ${response.status}`);
-  //     const data = await response.json();
-  //     setDeliveries(data);
-  //     console.log(data);
-  //   };
-  //   fetchDeliveries();
-  // }, []);
-
-  // Search functionality
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(deliveries);
 
-  useEffect(() => {
-    setFilteredData(deliveries);
-  }, [deliveries]);
+  // useEffect(() => {
+  //   setFilteredData(deliveries);
+  // }, [deliveries]);
+  // const { pregnancies, fetchPregnancies } = usePregnanciesStore((state) => ({
+  //   pregnancies: state.pregnancies,
+  //   fetchPregnancies: state.fetchPregnancies,
+  // }));
 
+  // useEffect(() => {
+  //   fetchPregnancies();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  // console.log(pregnancies);
   const handleSearch = (event) => {
     const value = event.target.value;
     setSearchTerm(value);

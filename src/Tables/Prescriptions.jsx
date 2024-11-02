@@ -19,20 +19,28 @@ import {
 import { EditIcon, Search2Icon, ViewIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import Pagination from "../Components/Pagination";
-import AddMedicalInfo from "../Modals/Medications/AddMedications";
-import EditMedicalInfo from "../Modals/Medications/EditMedication";
+import AddPrescriptions from "../Modals/Prescriptions/AddPrescription";
+import EditPrescriptions from "../Modals/Prescriptions/EditPrescriptions";
 // import { useProviderStore } from "../utils/store";
 import { useOutletContext } from "react-router";
 
 import ViewMedicalInfo from "../Modals/Medications/ViewMedications";
-
-function Medications() {
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+function Prescriptions() {
   const theme = useTheme();
-  const role = sessionStorage.getItem("userRole");
+  // const role = sessionStorage.getItem("userRole");
   const { colorMode } = useColorMode();
   const [elementData, setElementData] = useState(null);
   const contextData = useOutletContext();
-  const medications = contextData.medications;
+  const prescriptions = contextData.prescriptions;
+  console.log("context data", contextData);
+  console.log("prescriptions data", prescriptions);
 
   const {
     isOpen: isAddModal,
@@ -51,17 +59,17 @@ function Medications() {
   } = useDisclosure();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState(medications);
+  const [filteredData, setFilteredData] = useState(prescriptions);
+  const role = sessionStorage.getItem("userRole");
 
   useEffect(() => {
-    setFilteredData(medications);
-  }, [medications]);
+    setFilteredData(prescriptions);
+  }, [prescriptions]);
 
   const handleSearch = (event) => {
     const value = event.target.value;
     setSearchTerm(value);
-
-    const filteredResults = medications.filter(
+    const filteredResults = prescriptions.filter(
       (item) =>
         item.name.toLowerCase().includes(value.toLowerCase()) ||
         item.size_in_mg.toLowerCase().includes(value.toLowerCase()) ||
@@ -124,7 +132,7 @@ function Medications() {
         >
           Add Medication
         </Button>
-        <AddMedicalInfo isOpen={isAddModal} onClose={onAddModalClose} />
+        <AddPrescriptions isOpen={isAddModal} onClose={onAddModalClose} />
       </Flex>
       <Table variant="simple">
         <TableCaption>Medical Information</TableCaption>
@@ -138,36 +146,52 @@ function Medications() {
           }}
         >
           <Tr>
-            <Th>Name</Th>
-            <Th>Dose (mg)</Th>
-            <Th>Dose per Day</Th>
-            <Th>Route</Th>
-            <Th>Size (mg)</Th>
-            <Th>Timestamp</Th>
+            <Th>Medicine</Th>
+            <Th isNumeric>Dosage</Th>
+            <Th isNumeric>Duration(days)</Th>
+            <Th>Expiry Date</Th>
+            <Th>Filled Date</Th>
+            <Th isNumeric>Quantity</Th>
+            <Th isNumeric>Refill Count</Th>
+            <Th display={role !== "provider" ? "static" : "none"}>Provider</Th>
+            <Th>Parent/child</Th>
+
             <Th>Actions</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {paginatedData?.map((medication, index) => (
+          {paginatedData?.map((prescription, index) => (
             <Tr key={index}>
-              <Td>{medication.name}</Td>
-              <Td>{medication.dose_in_mg}</Td>
-              <Td>{medication.dose_per_day}</Td>
-              <Td>{medication.route}</Td>
-              <Td>{medication.size_in_mg}</Td>
-              <Td>{medication.timestamp}</Td>
+              <Td>{prescription.medicine.name}</Td>
+              <Td isNumeric>{prescription.dosage}</Td>
+              <Td isNumeric>{prescription.duration}</Td>
+              <Td>{formatDate(prescription.filled_date)}</Td>
+              <Td>{formatDate(prescription.expiry_date)}</Td>
+              <Td isNumeric>{prescription.quantity}</Td>
+              <Td isNumeric>{prescription.refill_count}</Td>
+              <Td display={role !== "provider" ? "static" : "none"}>
+                {prescription.provider.name}
+              </Td>
+              <Td>
+                {prescription.parent
+                  ? prescription.parent.name + "(parent)"
+                  : ""}
+                {prescription.child
+                  ? prescription.child.fullname + "(child)"
+                  : ""}
+              </Td>
               <Td>
                 <Flex alignItems={"center"} gap={"22px"}>
                   {" "}
                   <EditIcon
                     size="md"
                     onClick={() => {
-                      onEditModalOpen(setElementData(medication));
+                      onEditModalOpen(setElementData(prescription));
                     }}
-                    // display={role === "parent" ? "none" : "block"}
+                    display={role === "provider" ? "block" : "none"}
                     cursor={"pointer"}
                   />
-                  <EditMedicalInfo
+                  <EditPrescriptions
                     isOpen={isEditModal}
                     onClose={onEditModalClose}
                     data={elementData}
@@ -175,7 +199,7 @@ function Medications() {
                   <ViewIcon
                     size="20px"
                     onClick={() => {
-                      onViewModalOpen(setElementData(medication));
+                      onViewModalOpen(setElementData(prescription));
                     }}
                     cursor={"pointer"}
                   />
@@ -199,4 +223,4 @@ function Medications() {
   );
 }
 
-export default Medications;
+export default Prescriptions;

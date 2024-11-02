@@ -4,6 +4,7 @@ import { create } from "zustand";
 export const useParentStore = create((set) => ({
   parent: [],
   appointments: [],
+  pregnancies: [],
   loading: true,
   fetchParent: async (id) => {
     const url = `/api/parents/${id}`;
@@ -12,12 +13,27 @@ export const useParentStore = create((set) => ({
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP Error! status: ${res.status}`);
       const data = await res.json();
-      set({ parent: data, loading: false });
+      set({ pregnancies: data, loading: false });
     } catch (error) {
       console.error("Error fetching parent: ", error);
       set({ loading: false }); // Stop loading even if there's an error
     }
   },
+
+  fetchPregnancies: async () => {
+    const url = `/api/present_pregnancies`;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP Error! status: ${res.status}`);
+      const data = await res.json();
+      set({ parent: data, loading: false });
+    } catch (error) {
+      console.error("Error fetching pregnancy: ", error);
+      set({ loading: false }); // Stop loading even if there's an error
+    }
+  },
+
   fetchAppointments: async (id) => {
     const url = `/api/parents/${id}`;
 
@@ -209,11 +225,11 @@ export const useUsersStore = create((set) => ({
     providers: [],
     users: [],
     vaccines: [],
-    // discharge_medications: [],
-    // parents_medical_info: [],
+    medications: [],
     payments: [],
-    // present_pregnancies: [],
-    // previous_pregnancies: [],
+    present_pregnancies: [],
+    previous_pregnancies: [],
+    medical_info: [],
     vacination_records: [],
     medicines: [],
     prescriptions: [],
@@ -227,6 +243,7 @@ export const useUsersStore = create((set) => ({
     rooms: [],
     admissions: [],
     beds: [],
+    births: [],
   },
   loading: true,
 
@@ -236,11 +253,11 @@ export const useUsersStore = create((set) => ({
       { key: "providers", url: "/api/providers" },
       { key: "users", url: "/api/users" },
       { key: "vaccines", url: "/api/vaccines" },
-      // { key: "discharge_medications", url: "/api/discharge_medications" },
-      // { key: "parents_medical_info", url: "/api/parents_medical_info" },
+      { key: "medications", url: "/api/medications" },
+      { key: "medical_info", url: "/api/medical_info" },
       { key: "payments", url: "/api/payments" },
-      // { key: "present_pregnancies", url: "/api/present_pregnancies" },
-      // { key: "previous_pregnancies", url: "/api/previous_pregnancies" },
+      { key: "present_pregnancies", url: "/api/present_pregnancies" },
+      { key: "previous_pregnancies", url: "/api/previous_pregnancies" },
       { key: "vacination_records", url: "/api/records" },
       { key: "medicines", url: "/api/medicines" },
       { key: "prescriptions", url: "/api/prescriptions" },
@@ -254,6 +271,7 @@ export const useUsersStore = create((set) => ({
       { key: "rooms", url: "/api/rooms" },
       { key: "admissions", url: "/api/admissions" },
       { key: "beds", url: "/api/beds" },
+      { key: "births", url: "/api/births" },
     ];
 
     set({ loading: true });
@@ -289,13 +307,19 @@ export const useProvidersStore = create((set) => ({
   data: {
     // payments: [],
     vacination_records: [],
-    parents_prescriptions: [],
+    prescriptions: [],
     lab_tests: [],
     appointments: [],
     deliveries: [],
+    medicines: [],
     discharge_summaries: [],
+    medications: [],
     admissions: [],
     children: [],
+    present_pregnancies: [],
+    previous_pregnancies: [],
+    medical_info: [],
+    births: [],
   },
   loading: true,
 
@@ -304,8 +328,19 @@ export const useProvidersStore = create((set) => ({
     const endpoints = [
       // { key: "payments", url: "/api/payments" },
       { key: "vacination_records", url: `/api/records/provider/${id}` },
+      { key: "medications", url: `/api/medications/provider/${id}` },
+      { key: "medicines", url: "/api/medicines" },
+      { key: "medical_info", url: "/api/medical_info" },
       {
-        key: "parents_prescriptions",
+        key: "present_pregnancies",
+        url: `/api/present_pregnancies/provider/${id}`,
+      },
+      {
+        key: "previous_pregnancies",
+        url: `/api/previous_pregnancies/provider/${id}`,
+      },
+      {
+        key: "prescriptions",
         url: `/api/prescriptions/provider/${id}`,
       },
       { key: "lab_tests", url: `/api/labtests/provider/${id}` },
@@ -317,6 +352,7 @@ export const useProvidersStore = create((set) => ({
         url: `/api/discharge_summaries/provider/${id}`,
       },
       { key: "admissions", url: `/api/admissions/provider/${id}` },
+      { key: "births", url: `/api/births/provider/${id}` },
     ];
 
     set({ loading: true });
@@ -330,6 +366,7 @@ export const useProvidersStore = create((set) => ({
       });
 
       const results = await Promise.all(promises);
+      console.log(results);
 
       const updatedData = results.reduce((acc, result) => {
         acc[result.key] = result.data;
@@ -347,18 +384,24 @@ export const useProvidersStore = create((set) => ({
     }
   },
 }));
+
 export const useParentsStore = create((set) => ({
   data: {
     // payments: [],
     vacination_records: [],
-    parents_prescriptions: [],
+    prescriptions: [],
     documents: [],
     children: [],
     lab_tests: [],
     appointments: [],
     deliveries: [],
     discharge_summaries: [],
+    medications: [],
     admissions: [],
+    present_pregnancies: [],
+    previous_pregnancies: [],
+    medical_info: [],
+    births: [],
   },
   // providers: [],
   parent: [],
@@ -390,18 +433,34 @@ export const useParentsStore = create((set) => ({
       set({ loading: false }); // Stop loading even if there's an error
     }
   },
+  fetchMedicines: async () => {
+    set({ loading: true });
+    try {
+      const res = await fetch("/api/medicines");
+      if (!res.ok) throw new Error("Error fetching medicines");
+      const medicines = await res.json();
 
+      set((state) => ({
+        data: { ...state.data, medicines },
+        loading: false,
+      }));
+    } catch (error) {
+      set({ loading: false });
+      console.error("Error fetching medicines:", error);
+    }
+  },
   // Fetch all the data for every table based on parentId
   fetchAllData: async (id) => {
     const endpoints = [
       // { key: "payments", url: "/api/payments" },
       { key: "vacination_records", url: `/api/records/parent/${id}` },
       {
-        key: "parents_prescriptions",
+        key: "prescriptions",
         url: `/api/prescriptions/parent/${id}`,
       },
       { key: "documents", url: `/api/documents/parent/${id}` },
       { key: "children", url: `/api/children/parent/${id}` },
+      { key: "medical_info", url: `/api/medical_info/parent/${id}` },
       { key: "lab_tests", url: `/api/labtests/parent/${id}` },
       { key: "appointments", url: `/api/appointments/parent/${id}` },
       { key: "deliveries", url: `/api/deliveries/parent/${id}` },
@@ -410,6 +469,18 @@ export const useParentsStore = create((set) => ({
         url: `/api/discharge_summaries/parent/${id}`,
       },
       { key: "admissions", url: `/api/admissions/parent/${id}` },
+
+      { key: "medications", url: `/api/medications/parent/${id}` },
+      { key: "medical_info", url: `/api/medical_info/parent/${id}` },
+      {
+        key: "present_pregnancies",
+        url: `/api/present_pregnancies/parent/${id}`,
+      },
+      {
+        key: "previous_pregnancies",
+        url: `/api/previous_pregnancies/parent/${id}`,
+      },
+      { key: "births", url: `/api/births/parent/${id}` },
     ];
 
     set({ loading: true });
@@ -441,27 +512,20 @@ export const useParentsStore = create((set) => ({
   },
 }));
 
-// resetStore: () => {
-//   set({
-//     data: {
-//       providers: [],
-//       users: [],
-//       vaccines: [],
-//       payments: [],
-//       vacination_records: [],
-//       medicines: [],
-//       prescriptions: [],
-//       parents: [],
-//       documents: [],
-//       children: [],
-//       lab_tests: [],
-//       appointments: [],
-//       deliveries: [],
-//       discharge_summaries: [],
-//       rooms: [],
-//       admissions: [],
-//       beds: [],
-//     },
-//     loading: true, // Reset loading state if desired
-//   });
-// },
+export const usePregnanciesStore = create((set) => ({
+  pregnancies: [],
+  loadState: true,
+  fetchPregnancies: async () => {
+    const url = `/api/present_pregnancies`;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP Error! status: ${res.status}`);
+      const data = await res.json();
+      set({ pregnancies: data, loadState: false });
+    } catch (error) {
+      console.error("Error fetching pregnancy: ", error);
+      set({ loadState: false });
+    }
+  },
+}));
